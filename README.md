@@ -42,7 +42,7 @@ Dayta is a React Native mobile application that helps users track daily activiti
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/dayta.git
+git clone https://github.com/gabriel-eidelman/Dayta.git
 
 # Navigate to the project folder
 cd dayta
