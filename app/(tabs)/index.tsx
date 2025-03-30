@@ -1,4 +1,4 @@
-import { StyleSheet, View, Dimensions, FlatList, Text, TouchableOpacity, TextInput, KeyboardAvoidingView} from 'react-native';
+import { StyleSheet, View, Dimensions, FlatList, Text, TouchableOpacity, ScrollView, Button, TextInput, KeyboardAvoidingView} from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { useState, useEffect, useRef } from 'react';
 import {AntDesign, MaterialIcons, Ionicons, Feather, MaterialCommunityIcons, FontAwesome5} from '@expo/vector-icons';
@@ -15,6 +15,8 @@ import NoStartTimeModal from '@/components/NoStartTimeModal';
 import CalendarConnect from '@/components/CalendarConnect';
 import CalendarInformation from '@/components/CalendarInformation'
 import {storage} from '@/utils/mmkvStorage';
+import { fetchSuggestions, JournalSuggestion } from "@/components/JournalingSuggestions";
+
 
 import { getSunriseSunset, generateISODate } from '@/utils/DateTimeUtils';
 
@@ -196,6 +198,9 @@ function Journal() {
   const [sunsetTime, setSunsetTime] = useState<number>(0);
   // const [authToken, setAuthToken] = useState<string | null>(null)
   // const [showAuth, setShowAuth] = useState<boolean>(false);
+  const [suggestions, setSuggestions] = useState<JournalSuggestion[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
   const storedToken = storage.getString('AuthToken')
 
   // if(!storedToken) {
@@ -207,6 +212,17 @@ function Journal() {
   //   setShowAuth(false);
   //   }
   // }, [authToken])
+
+  const loadSuggestions = async () => {
+    try {
+      setError(null);
+      const data = await fetchSuggestions();
+      setSuggestions(data);
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
   const sunriseActivity: ActivityWithEnd = {
     id: uuid.v4() as string,
     parentRoutName: 'sun',  // Optional field to identify special types
@@ -282,6 +298,7 @@ function Journal() {
   }
   useEffect(() => {
     generateSunriseSunset();
+    loadSuggestions();
 }, [dateIncrement])
   const [activityDescribeVisible, setActivityDescribeVisible] = useState<boolean>(false);
   useEffect(() => {
@@ -356,11 +373,24 @@ function Journal() {
         </View>
         {/* {showAuth ? <CalendarConnect authToken={authToken} setAuthToken={setAuthToken} /> : <></>} */}
         {/* <CalendarInformation authToken={authToken}/> */}
+        <ScrollView style={{ padding: 20 }}>
+          <Button title="Refresh Suggestions" onPress={loadSuggestions} />
+          {error && <Text style={{ color: "red" }}>Error: {error}</Text>}
+          {suggestions.map((suggestion, index) => (
+            <View key={index} style={{ marginVertical: 10 }}>
+              <Text>📌 {suggestion.text}</Text>
+              <Text>📅 {new Date(suggestion.date * 1000).toLocaleString()}</Text>
+              <Text>📍 {suggestion.location || "Unknown Location"}</Text>
+              <Text>🏷️ {suggestion.category}</Text>
+            </View>
+          ))}
+      </ScrollView>
         {withSunriseSunset.length>0 ? 
         <KeyboardAvoidingView 
         behavior= {'padding'}
         keyboardVerticalOffset={80} 
         style={{marginBottom: 80}}>
+
         <FlatList 
         ref={flatListRef}
         data={withSunriseSunset}
