@@ -7,6 +7,8 @@
 
 import Foundation
 import React
+import SwiftUI
+import UIKit
 import JournalingSuggestions
 
 @objc(JournalSuggestionsModule)
@@ -15,17 +17,53 @@ class JournalSuggestionsModule: NSObject, RCTBridgeModule {
     static func moduleName() -> String {
         return "JournalSuggestionsModule"
     }
+    
+    static func requiresMainQueueSetup() -> Bool {
+        return true
+    }
+    // Add to JournalSuggestionsModule.swift
+    private var lastSelectedSuggestion: [String: Any]? = nil
+  
+    @objc
+    func presentSuggestionsPicker(_ callback: @escaping RCTResponseSenderBlock) {
+        DispatchQueue.main.async {
+            // Get root view controller
+            guard let rootViewController = UIApplication.shared.windows.first?.rootViewController else {
+                callback(["Could not find root view controller", NSNull()])
+                return
+            }
+            
+            // Create the view with a callback to send data back to React Native
+            let pickerView = JournalPickerView(onSuggestionSelected: { suggestion in
+                // Convert suggestion to dictionary
+                let suggestionDict: [String: Any] = [
+                    "text": suggestion.title,
+                ]
+                
+                self.lastSelectedSuggestion = suggestionDict
 
+                // Send data back to React Native
+                callback([NSNull(), suggestionDict])
+            })
+            
+            // Wrap in UIHostingController
+            let hostingController = UIHostingController(rootView: pickerView)
+            hostingController.modalPresentationStyle = .pageSheet
+            
+            // Present the controller
+            rootViewController.present(hostingController, animated: true)
+        }
+    }
+    
+    // Your existing fetchSuggestions method
     @objc
     func fetchSuggestions(_ callback: @escaping RCTResponseSenderBlock) {
-        // Fetch journaling suggestions from Apple's API
-      let suggestions: [[String: Any]] = [
-          ["text": "Worked out", "date": Date().timeIntervalSince1970, "category": "Exercise", "location": "Gym"],
-          ["text": "Read a book", "date": Date().addingTimeInterval(-86400).timeIntervalSince1970, "category": "Reading", "location": "Home"],
-          ["text": "Cooked dinner", "date": Date().addingTimeInterval(-172800).timeIntervalSince1970, "category": "Cooking", "location": "Kitchen"]
-      ]
-      callback([NSNull(), suggestions])
+      if let lastSuggestion = lastSelectedSuggestion {
+          callback([NSNull(), [lastSuggestion]])
+      } else {
+        let suggestion: [String: Any] = ["text": "Cooked dinner"]
+    
+        callback([NSNull(), suggestion])
+      }
     }
 }
-
-

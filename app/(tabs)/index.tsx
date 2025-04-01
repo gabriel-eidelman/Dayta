@@ -15,7 +15,7 @@ import NoStartTimeModal from '@/components/NoStartTimeModal';
 import CalendarConnect from '@/components/CalendarConnect';
 import CalendarInformation from '@/components/CalendarInformation'
 import {storage} from '@/utils/mmkvStorage';
-import { fetchSuggestions, JournalSuggestion } from "@/components/JournalingSuggestions";
+import { fetchSuggestion, JournalSuggestion, showSuggestionsPicker } from "@/components/JournalingSuggestions";
 
 
 import { getSunriseSunset, generateISODate } from '@/utils/DateTimeUtils';
@@ -198,7 +198,7 @@ function Journal() {
   const [sunsetTime, setSunsetTime] = useState<number>(0);
   // const [authToken, setAuthToken] = useState<string | null>(null)
   // const [showAuth, setShowAuth] = useState<boolean>(false);
-  const [suggestions, setSuggestions] = useState<JournalSuggestion[]>([]);
+  const [suggestion, setSuggestion] = useState<JournalSuggestion | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const storedToken = storage.getString('AuthToken')
@@ -213,11 +213,21 @@ function Journal() {
   //   }
   // }, [authToken])
 
+  const handleShowPicker = async () => {
+    try {
+      const selected = await showSuggestionsPicker();
+      setSuggestion(selected);
+      console.log("suggestions set");
+    } catch (error) {
+      console.error('Error showing picker:', error);
+    }
+  };
+
   const loadSuggestions = async () => {
     try {
       setError(null);
-      const data = await fetchSuggestions();
-      setSuggestions(data);
+      const data = await fetchSuggestion();
+      setSuggestion(data);
     } catch (err: any) {
       setError(err.message);
     }
@@ -298,7 +308,7 @@ function Journal() {
   }
   useEffect(() => {
     generateSunriseSunset();
-    loadSuggestions();
+    // loadSuggestions();
 }, [dateIncrement])
   const [activityDescribeVisible, setActivityDescribeVisible] = useState<boolean>(false);
   useEffect(() => {
@@ -376,15 +386,26 @@ function Journal() {
         <ScrollView style={{ padding: 20 }}>
           <Button title="Refresh Suggestions" onPress={loadSuggestions} />
           {error && <Text style={{ color: "red" }}>Error: {error}</Text>}
-          {suggestions.map((suggestion, index) => (
-            <View key={index} style={{ marginVertical: 10 }}>
-              <Text>📌 {suggestion.text}</Text>
-              <Text>📅 {new Date(suggestion.date * 1000).toLocaleString()}</Text>
-              <Text>📍 {suggestion.location || "Unknown Location"}</Text>
-              <Text>🏷️ {suggestion.category}</Text>
+
+            <View style={{ marginVertical: 10 }}>
+              <Text style={{color: 'white'}}>📌 {suggestion!=null ? suggestion.text : "No Suggestion"}</Text>
             </View>
-          ))}
       </ScrollView>
+      <Button
+        title="Show Suggestions Picker"
+        onPress={handleShowPicker}
+      />
+      
+        {suggestion!=null && (
+          <View style={styles.suggestionContainer}>
+            <Text style={styles.suggestionText}>
+              Selected: {suggestion.text}
+            </Text>
+            {/* {suggestions.category && (
+              <Text>Category: {suggestions.category}</Text>
+            )} */}
+          </View>
+        )}
         {withSunriseSunset.length>0 ? 
         <KeyboardAvoidingView 
         behavior= {'padding'}
@@ -538,6 +559,22 @@ otherButtonContainer: {
   bottom: height/40.6, // Space from the bottom of the container
   left: width-buttonWidth-20, // Center horizontally more precisely
   width: buttonWidth
+},
+title: {
+  fontSize: 24,
+  fontWeight: 'bold',
+  marginBottom: 20,
+},
+suggestionContainer: {
+  marginTop: 20,
+  padding: 15,
+  backgroundColor: '#e1f5fe',
+  borderRadius: 8,
+  width: '100%',
+},
+suggestionText: {
+  fontSize: 16,
+  fontWeight: '500',
 },
 });
 

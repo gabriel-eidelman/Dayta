@@ -54,8 +54,8 @@ target 'Dayta' do
       # Your existing code
       target.build_configurations.each do |config|
         config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
-        # Add this line to force all pods to use iOS 17.2
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '17.2'
+        # Add this line to force all pods to use iOS 15.0
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
       end
       
       # Add this code to fix the BoringSSL-GRPC issue

@@ -2,24 +2,41 @@ import { NativeModules } from "react-native";
 
 const { JournalSuggestionsModule } = NativeModules;
 
+// Updated type definition with only the properties we're using
 type JournalSuggestion = {
   text: string;
-  date: number; // Timestamp
-  category: string;
-  location?: string;
+  date?: number; // Optional now since it might not come from the picker
+  category?: string; // Optional since it might not come from the picker
+  location?: string; // Optional since it might not come from the picker
 };
 
-const fetchSuggestions = async (): Promise<JournalSuggestion[]> => {
+// The existing function to fetch dummy suggestions
+const fetchSuggestion = async (): Promise<JournalSuggestion> => {
   return new Promise((resolve, reject) => {
-    JournalSuggestionsModule.fetchSuggestions((error: string | null, suggestions: JournalSuggestion[]) => {
+    JournalSuggestionsModule.fetchSuggestions((error: string | null, suggestion: JournalSuggestion) => {
       if (error) {
         reject(new Error(error));
       } else {
-        console.log(suggestions);
-        resolve(suggestions);
+        console.log(suggestion);
+        resolve(suggestion);
       }
     });
   });
 };
 
-export { fetchSuggestions, JournalSuggestion };
+// New function to show the picker
+const showSuggestionsPicker = async (): Promise<JournalSuggestion> => {
+  return new Promise((resolve, reject) => {
+    JournalSuggestionsModule.presentSuggestionsPicker((error: string | null, suggestion: JournalSuggestion) => {
+      if (error) {
+        console.log("error");
+        reject(new Error(error));
+      } else {
+        console.log('Selected suggestion:', suggestion);
+        resolve(suggestion);
+      }
+    });
+  });
+};
+
+export { fetchSuggestion, showSuggestionsPicker, JournalSuggestion };
