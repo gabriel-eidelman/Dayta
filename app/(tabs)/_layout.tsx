@@ -3,6 +3,8 @@ import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons'; // Correct import for Ionicons with Expo
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import scheme from '@/utils/colorScheme';
+import { Dimensions } from 'react-native';
 
 type IoniconName = keyof typeof Ionicons.glyphMap;
 
@@ -14,6 +16,7 @@ type TabBarIconProps = {
 const TabBarIcon: React.FC<TabBarIconProps> = ({ name, color }) => (
   <Ionicons name={name} size={35} color={color} />
 );
+const { width, height } = Dimensions.get('window');
 
 export default function TabLayout() {
 
@@ -23,7 +26,9 @@ export default function TabLayout() {
         tabBarActiveTintColor: 'grey',
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#1B1B1B', // Replace 'yourColorHere' with the desired color
+          backgroundColor: scheme.white,
+          paddingTop: 10,
+          height: height/10,
         },
       }}
     >
@@ -32,7 +37,7 @@ export default function TabLayout() {
         options={{
           title: 'Journal',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'book' : 'book-outline'} color={color} />
+            <TabBarIcon name={focused ? 'book' : 'book-outline'} color={scheme.mutedDarkGray} />
           ),
         }}
       />
@@ -41,7 +46,7 @@ export default function TabLayout() {
         options={{
           title: 'Personalize',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'repeat' : 'repeat-outline'} color={color} />
+            <TabBarIcon name={focused ? 'repeat' : 'repeat-outline'} color={scheme.mutedDarkGray} />
           ),
         }}
       />
@@ -50,7 +55,7 @@ export default function TabLayout() {
         options={{
           title: 'Recs',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'star' : 'star-outline'} color={color} /> // Updated icon for recommendations
+            <TabBarIcon name={focused ? 'star' : 'star-outline'} color={scheme.mutedDarkGray} /> // Updated icon for recommendations
           ),
         }}
       />
@@ -59,7 +64,7 @@ export default function TabLayout() {
         options={{
           title: 'Stats',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'stats-chart' : 'stats-chart-outline'} color={color} /> // Updated icon for stats
+            <TabBarIcon name={focused ? 'stats-chart' : 'stats-chart-outline'} color={scheme.mutedDarkGray} /> // Updated icon for stats
           ),
         }}
       />
@@ -68,7 +73,7 @@ export default function TabLayout() {
         options={{
           title: 'Settings',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'settings' : 'settings-outline'} color={color} /> // Updated icon for settings
+            <TabBarIcon name={focused ? 'settings' : 'settings-outline'} color={scheme.mutedDarkGray} /> // Updated icon for settings
           ),
         }}
       />

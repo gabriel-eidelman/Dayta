@@ -8,7 +8,7 @@ ENV['RCT_NEW_ARCH_ENABLED'] = podfile_properties['newArchEnabled'] == 'true' ? '
 ENV['EX_DEV_CLIENT_NETWORK_INSPECTOR'] = podfile_properties['EX_DEV_CLIENT_NETWORK_INSPECTOR']
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
-platform :ios, podfile_properties['ios.deploymentTarget'] || '15.0'
+platform :ios, podfile_properties['ios.deploymentTarget'] || '17.2'
 
 source 'https://github.com/expo/expo.git'
 source 'https://github.com/CocoaPods/Specs.git'

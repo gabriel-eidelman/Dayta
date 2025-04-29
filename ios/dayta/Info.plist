@@ -22,6 +22,9 @@
 	<string>1.0.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>NSJournalingSuggestionsUsageDescription</key>
+	<string>We need access to provide personalized journaling suggestions.</string>
+
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
