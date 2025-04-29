@@ -1,13 +1,13 @@
 import {ModalProps, Modal, View, StyleSheet, Dimensions, Text, TouchableWithoutFeedback, Platform, TouchableOpacity} from 'react-native'
-import {ThemedText} from './ThemedText'
+import {ThemedText} from '../ThemedText'
 import {Button} from '@rneui/themed'
-import TimeDropdown from './TimeDropdown'
+import TimeDropdown from '../TimeHandling/TimeDropdown'
 import {useState, useEffect} from 'react'
 import Slider from '@react-native-community/slider';
 import {useAppContext} from '@/contexts/AppContext'
 import {useAuth} from '@/contexts/AuthContext'
 import FetchDayActivities from '@/Data/FetchDayActivities'
-import ActivitySearchModal from './ActivitySearchModal'
+import ActivitySearchModal from '../Modals/ActivitySearchModal'
 import { SearchBar } from '@rneui/themed'
 
 const {width, height} = Dimensions.get("window");

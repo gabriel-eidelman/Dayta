@@ -1,10 +1,10 @@
 import {ModalProps, Modal, View, StyleSheet, Dimensions, Text, TouchableWithoutFeedback, Platform, TouchableOpacity, Keyboard} from 'react-native'
 import {useState, useEffect} from 'react'
 import {useAppContext} from '@/contexts/AppContext'
-import CustomButton from './CustomButton';
-import TimeInput from './TimeInput'
+import CustomButton from '../Custom/CustomButton';
+import TimeInput from '../TimeHandling/TimeInput'
 import RNPickerSelect from 'react-native-picker-select'
-import TimeDropdown from './TimeDropdown'
+import TimeDropdown from '../TimeHandling/TimeDropdown'
 import { convertTimeToUnix, adjustDateByDays, decimalToDurationTime } from '@/utils/DateTimeUtils';
 import { Routine,  Activity } from '@/Types/ActivityTypes';
 import CreateRoutineModal from './CreateRoutineModal';

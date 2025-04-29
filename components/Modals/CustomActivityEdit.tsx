@@ -1,12 +1,12 @@
 import {ModalProps, Modal, View, StyleSheet, Dimensions, Text, TouchableWithoutFeedback, TextInput, FlatList, TouchableOpacity} from 'react-native'
-import {ThemedText} from './ThemedText'
+import {ThemedText} from '../ThemedText'
 import React, {useState, useEffect} from 'react'
 import { Button } from '@rneui/themed'
 import {ButtonState, Activity} from '@/Types/ActivityTypes'
 import { useAppContext } from '@/contexts/AppContext';
 import RNPickerSelect from 'react-native-picker-select'
 import { AntDesign } from '@expo/vector-icons';
-import CategoryBar from './CategoryBar'
+import CategoryBar from '../CategoryBar'
 import {Feather, MaterialCommunityIcons, FontAwesome, FontAwesome5, MaterialIcons} from '@expo/vector-icons'
 import { parse } from '@babel/core'
 

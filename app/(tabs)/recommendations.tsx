@@ -7,8 +7,8 @@ import { Activity, Card } from '@/Types/ActivityTypes';
 import { useCustomSet } from '@/Data/CustomSet';
 import { useAppContext } from '@/contexts/AppContext';
 import Swiper from 'react-native-deck-swiper';
-import LogicModal from '@/components/LogicModal'
-import CustomButton from '@/components/CustomButton'
+import LogicModal from '@/components/Modals/LogicModal'
+import CustomButton from '@/components/Custom/CustomButton'
 import {PremadeCards} from '@/Data/PremadeCards'
 
 //import firestore from '@react-native-firebase/firestore'

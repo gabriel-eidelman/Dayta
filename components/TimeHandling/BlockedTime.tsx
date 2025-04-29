@@ -2,14 +2,14 @@ import { StyleSheet, View, Dimensions, FlatList, Text, TouchableOpacity, NativeS
 import { ThemedText } from '@/components/ThemedText';
 import { useState, useEffect, useRef, RefObject} from 'react';
 import {AntDesign, MaterialIcons, Ionicons} from '@expo/vector-icons';
-import MyModal from '@/components/MyModal'
+import MyModal from '@/components/Modals/MyModal'
 import { AppProvider, useAppContext } from '@/contexts/AppContext';
 import { collection, onSnapshot, getDocs } from 'firebase/firestore';
 import {firestore} from '@/firebase/firebase'
 import {useAuth} from '@/contexts/AuthContext'
 import getFilteredActivityRefs from '@/Data/HandleTime'
 import FetchDayActivities from '@/Data/FetchDayActivities'
-import ActivityDescribeModal from '@/components/ActivityDescribeModal'
+import ActivityDescribeModal from '@/components/Modals/ActivityDescribeModal'
 import { Activity } from '@/Types/ActivityTypes';
 // Get screen width. This is for more responsive layouts
 const { width, height } = Dimensions.get('window');

@@ -6,11 +6,11 @@ import {View, Text, TouchableOpacity, StyleSheet, Dimensions, TextInput, Touchab
 import { ThemedText } from '@/components/ThemedText'
 import RNPickerSelect from 'react-native-picker-select'
 import { Routine, Activity } from '@/Types/ActivityTypes'
-import CreateRoutineModal from '@/components/CreateRoutineModal'
+import CreateRoutineModal from '@/components/Modals/CreateRoutineModal'
 import uuid from 'react-native-uuid'
-import CustomButton from '@/components/CustomButton'
+import CustomButton from '@/components/Custom/CustomButton'
 import { MaterialIcons, AntDesign } from '@expo/vector-icons'
-import CustomActivityEdit from '@/components/CustomActivityEdit'
+import CustomActivityEdit from '@/components/Modals/CustomActivityEdit'
 
 const {width, height} = Dimensions.get("window");
 const buttonWidth = width/5;

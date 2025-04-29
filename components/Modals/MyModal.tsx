@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Modal, View, Text, StyleSheet, ModalProps, Dimensions, TouchableOpacity} from 'react-native';
-import {ThemedText} from './ThemedText'
-import CustomButton from './CustomButton'
+import {ThemedText} from '../ThemedText'
+import CustomButton from '../Custom/CustomButton'
 import {useAppContext} from '@/contexts/AppContext'
 const {width, height} = Dimensions.get("window");
 const buttonWidth = width/5;

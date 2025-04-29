@@ -1,16 +1,16 @@
 import { StyleSheet, View, Dimensions, SafeAreaView, ScrollView, Text } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
-import DashboardChart from '@/components/DashboardChart'
+import DashboardChart from '@/components/Stats/DashboardChart'
 import {useEffect, useState} from 'react'
 const { width, height } = Dimensions.get('window');
 const buttonWidth = width/6.25
 import {useAuth} from '@/contexts/AuthContext'
 import {AppProvider, useAppContext} from '@/contexts/AppContext'
 import {useCustomSet} from '@/Data/CustomSet'
-import PieChart from '@/components/PieChart'
-import BlockedTime from '@/components/BlockedTime'
+import PieChart from '@/components/Stats/PieChart'
+import BlockedTime from '@/components/TimeHandling/BlockedTime'
 import { Activity } from '@/Types/ActivityTypes';
-import SleepLineChart from '@/components/SleepLineChart';
+import SleepLineChart from '@/components/Stats/SleepLineChart';
 import {decimalToTime, decimalToDurationTime} from '@/utils/DateTimeUtils'
 
 // Define a type for the counts object

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import {StyleSheet, View, Text} from 'react-native'
-import {ThemedText} from './ThemedText'
+import {ThemedText} from '../ThemedText'
 
 interface TimeDropdownProps {
     selectedHour: string;

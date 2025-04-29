@@ -1,14 +1,14 @@
 import {ModalProps, Modal, View, StyleSheet, Dimensions, Text, TouchableWithoutFeedback, Platform, TouchableOpacity} from 'react-native'
-import {ThemedText} from './ThemedText'
+import {ThemedText} from '../ThemedText'
 import {Button} from '@rneui/themed'
-import TimeDropdown from './TimeDropdown'
+import TimeDropdown from '../TimeHandling/TimeDropdown'
 import {useState, useEffect} from 'react'
 import Slider from '@react-native-community/slider';
 import {useAppContext} from '@/contexts/AppContext'
 import {useAuth} from '@/contexts/AuthContext'
 import FetchDayActivities from '@/Data/FetchDayActivities'
 import {RadioButton} from 'react-native-paper'
-import TimeInput from './HourPicker'
+import TimeInput from '../TimeHandling/HourPicker'
 import {ButtonState, Activity, TimeBlock, ActivityWithEnd} from '@/Types/ActivityTypes'
 import { convertTimeToUnix,  adjustDateByDays} from '@/utils/DateTimeUtils'
 

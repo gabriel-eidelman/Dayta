@@ -8,7 +8,7 @@ import { getSunriseSunset } from '@/utils/DateTimeUtils';
 import { decimalToTime } from '@/utils/DateTimeUtils';
 import {Activity} from '@/Types/ActivityTypes'
 import { MaterialIcons } from '@expo/vector-icons';
-import { ThemedText } from './ThemedText';
+import { ThemedText } from '../ThemedText';
 
 const {width, height} = Dimensions.get("window");
 const buttonWidth = width/6.25

@@ -31,4 +31,21 @@ const lightScheme: ColorScheme = {
     // accent: "#32cd32",
 };
 
-export default lightScheme;
+const darkScheme: ColorScheme = {
+    background: "#1C1C1B",    // very dark warm gray, soft on the eyes
+    cardBorder: "#333331",    // slightly lighter for subtle card separation
+    strongDarkGray: "#F5F5F4", // inverted light text
+    mutedDarkGray: "#AAAAAA",  // muted, but clear enough for subtitles
+    plusButton: "#B5A58D",     // muted tan, echoes the plus button color
+    white: "#FFFFFF",          // keep true white for occasional highlights
+    // primary: "#6495ED",     // optional: soft cornflower blue for links/buttons
+    // secondary: "#FF8264",   // optional: softened coral
+    // accent: "#7ED957",      // optional: fresh green accent
+};
+
+const getColorScheme = (isDarkMode: boolean): ColorScheme => {
+    return isDarkMode ? darkScheme : lightScheme;
+}
+const scheme = getColorScheme(false); // Default to light mode
+
+export default scheme;

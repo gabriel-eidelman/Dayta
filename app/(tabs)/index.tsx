@@ -2,196 +2,29 @@ import { StyleSheet, View, Dimensions, FlatList, Text, TouchableOpacity, ScrollV
 import { ThemedText } from '@/components/ThemedText';
 import { useState, useEffect, useRef } from 'react';
 import {AntDesign, MaterialIcons, Ionicons, Feather, MaterialCommunityIcons, FontAwesome5} from '@expo/vector-icons';
-import MyModal from '@/components/MyModal'
+import MyModal from '@/components/Modals/MyModal'
 import { useAppContext } from '@/contexts/AppContext';
 import {useAuth} from '@/contexts/AuthContext'
 import FetchDayActivities from '@/Data/FetchDayActivities'
-import ActivityDescribeModal from '@/components/ActivityDescribeModal'
+import ActivityDescribeModal from '@/components/Modals/ActivityDescribeModal'
 import {DateTime} from 'luxon'
 import {Activity, ActivityWithEnd} from '@/Types/ActivityTypes';
-import HandleSubmitEditing from '@/Data/HandleSubmitEditing';
 import uuid from 'react-native-uuid'
-import NoStartTimeModal from '@/components/NoStartTimeModal';
+import NoStartTimeModal from '@/components/Modals/NoStartTimeModal';
 import CalendarConnect from '@/components/CalendarConnect';
 import CalendarInformation from '@/components/CalendarInformation'
 import {storage} from '@/utils/mmkvStorage';
 import { fetchSuggestion, JournalSuggestion, showSuggestionsPicker } from "@/components/JournalingSuggestions";
 import scheme from '@/utils/colorScheme';
+import layout_styles from '@/styles/layoutStyles';
+import font_styles from '@/styles/typography';
+import ActivityItem from '@/components/ActivityItem';
 
 import { getSunriseSunset, generateISODate } from '@/utils/DateTimeUtils';
 
 // Get screen width. This is for more responsive layouts
 const { width, height } = Dimensions.get('window');
 const buttonWidth = width/6.25
-
-const convertUnixToTimeString = (startTime: number, endTime: number, isInput: boolean): string => {
-  // Create Date objects from the Unix timestamps
-  const startDate = new Date(startTime * 1000); // Convert seconds to milliseconds
-  const endDate = new Date(endTime * 1000);
-
-  // Get hours and minutes in local time
-  let startHours = startDate.getHours();
-  let endHours = endDate.getHours();
-  const startMinutes = startDate.getMinutes();
-
-  // Determine AM or PM
-  const periodStart = startHours < 12 ? 'AM' : 'PM';
-  const periodEnd = endHours < 12 ? 'AM' : 'PM';
-
-  // Convert hours from 24-hour to 12-hour format
-  startHours = startHours % 12;
-  startHours = startHours ? startHours : 12; // Hour '0' should be '12'
-
-  // Format minutes to always have two digits
-  const formattedMinutes = startMinutes < 10 ? `0${startMinutes}` : `${startMinutes}`;
-
-  // Construct the formatted time string
-  if (!isInput) {
-    if (endTime > 0) {
-      return `${startHours}:${formattedMinutes}`;
-    } else {
-      // return `${startHours}:${formattedMinutes} ${periodStart}`;
-      return `${startHours}:${formattedMinutes} ${periodStart}`;
-
-    }
-  } else {
-    if(startHours>=10) {
-      return `${startHours}:${formattedMinutes}${periodStart}`;
-      }
-      else {
-        return `0${startHours}:${formattedMinutes}${periodStart}`
-      };
-  }
-};
-
-interface ActivityItemProps {
-  activity: ActivityWithEnd;
-  onRemove: (activity: Activity) => void 
-  timeState:(boolean | string)[];
-  dateIncrement: number,
-  updateActivity: any,
-  moveActivity: any,
-  onTimeTap: (activity: Activity) => void
-  onTap: (activity: Activity) => void
-}
-
-const ActivityItem = ({ activity, onRemove, timeState, dateIncrement, updateActivity, moveActivity, onTimeTap, onTap }: ActivityItemProps) => {
-  let specialButton = false;
-  let sunrise = false;
-  let sunset = false;
-  let rout = false;
-  if(activity.button.text=='Woke Up' || activity.button.text=='Went To Bed' || activity.button.text=='Coffee') {
-    specialButton=true
-  }
-  if(activity.parentRoutName && activity.parentRoutName!=="sun") {
-    rout = true
-  }
-  else if(activity.button.text=='Sunrise' || activity.button.text=="Sunset") {
-    sunrise = true;
-  }
-  // const morningCutoff = justActivities.filter()
-  // if(activity.timeBlock.startTime>=)
-
-  const [inputValue, setInputValue] = useState<string>(convertUnixToTimeString(activity.timeBlock.startTime, activity.timeBlock.endTime, true));
-  const [input2Value, setInput2Value] = useState<string>(convertUnixToTimeString(activity.timeBlock.endTime, 0, true));
-
-  const maxLength = 7;
-  const handleInputChange = (text: string) => {
-   setInputValue(text); 
-  };
-  const handleInput2Change = (text: string) => {
-    setInput2Value(text); 
-   };
-   let Cat: string[] = []
-   if(activity.button.category && activity.button.category.length>0) {
-    Cat = activity.button.category.map(cat => cat.toLowerCase())
-   }
-
-   const iconMapping: { [key: string]: JSX.Element } = {
-    "sunlight": <Feather name="sun" style={styles.category} />,
-    "coffee": <Feather name="coffee" style={styles.category} />,
-    "intense activity": <MaterialCommunityIcons name="dumbbell" style={styles.category} />,
-    "workout": <MaterialCommunityIcons name="dumbbell" style={styles.category} />,
-    "exercise": <MaterialCommunityIcons name="dumbbell" style={styles.category} />,
-    "light activity": <FontAwesome5 name="heartbeat" style={styles.category} />,
-    "mental stimulation": <FontAwesome5 name="brain" style={styles.category} />,
-    "meditation": <MaterialCommunityIcons name="meditation" style={styles.category} />,
-    "electronics": <MaterialIcons name="phone-iphone" style={styles.category} />,
-    "dopamine rush": <FontAwesome5 name="bolt" style={styles.category} />
-    // Add more categories and corresponding JSX elements here
-  };
-  const getActivityContainerStyle = () => {
-    // if (specialButton) {
-    //   return styles2.activityContainer;
-    // } else if (sunrise) {
-    //   return styles3.activityContainer;
-    // } else if (rout) {
-    //   return styles4.activityContainer;
-    // } else {
-    //   return styles.activityContainer;
-    // }
-    return styles.activityContainer;
-
-  }
-  
-  return (
-   
-    <View>
-
-        <View style={getActivityContainerStyle()}>
-          <TouchableOpacity onPress={() => onTap(activity)} style={styles.allTouchables}>
-            <TouchableOpacity onPress={() => onTimeTap(activity)} style={styles.touchableTime}>
-              <View style={styles.timeContainer}>
-                {(timeState[0] && activity.id==timeState[1]) ? 
-                (
-                  <>
-                    <TextInput         
-                    value={inputValue}
-                    onChangeText={handleInputChange}
-                    maxLength={maxLength}
-                    keyboardType="default" 
-                    onSubmitEditing={() => HandleSubmitEditing(inputValue, input2Value, maxLength, activity, dateIncrement, updateActivity, moveActivity)}
-                    returnKeyType="done"
-                    style={styles.timeText} />
-                    <Text style={styles.timeText}> - </Text>
-                    <TextInput         
-                    value={input2Value}
-                    onChangeText={handleInput2Change}
-                    maxLength={maxLength}
-                    keyboardType="default"
-                    onSubmitEditing={() => HandleSubmitEditing(inputValue, input2Value, maxLength, activity, dateIncrement, updateActivity, moveActivity)}
-                    returnKeyType="done" 
-                    style={styles.timeText} />
-                  </>
-                ) : 
-                (
-                <>
-                  <Text style={styles.timeText}>{convertUnixToTimeString(activity.timeBlock.startTime, activity.timeBlock.endTime, false)}</Text>
-                    <Text style={styles.timeText}> - </Text>
-                    <Text style={styles.timeText}>{convertUnixToTimeString(activity.timeBlock.endTime, 0, false)}
-                  </Text>
-                </>
-                )}
-              </View>
-            </TouchableOpacity>
-
-            <View style={styles.touchableActivity}>
-              <Text style={styles.activityName}>{activity.button.text}</Text>
-            </View>
-              {/* <View style={styles.indexCategories}>
-              {Cat.length>0 ? Cat.map((cat) => (
-                  <View key={cat}>
-                    {iconMapping[cat] || <Feather name="help-circle" style={styles.category} />}
-                  </View>
-                )) : <></>}  
-                </View> */}
-          {/* <TouchableOpacity onPress={() => onRemove(activity)} style={styles.touchableDelete}>
-            <MaterialIcons name="delete" size={width / 15} color="grey" />
-          </TouchableOpacity> */}
-        </TouchableOpacity>
-      </View>
-    </View>
-);}
 
 function Journal() {
 
@@ -366,71 +199,73 @@ function Journal() {
     }
   return (
     
-      <View style={styles.layoutContainer}>
+      <View style={layout_styles.layoutContainer}>
+        {/* Global Modals */}
         <MyModal visible={modalVisible} onClose={toggleModal} />
         {activityInfo && (<ActivityDescribeModal style={styles.durationModal} ActivityDescribeVisible={activityDescribeVisible} Info={activityInfo as Activity} onClose={() => setActivityDescribeVisible(false)} onTapOut={() => setActivityDescribeVisible(false)}/>)}
         <NoStartTimeModal visible={noStartModalVisible} onClose={() => setNoStartModalVisible(false)} remove={remove} otherArray={noEnd}/>
-        <View style={styles.contentContainer} >
-              <View style={{alignItems: 'center'}}>
-                <Text style={{fontSize: width/12, fontFamily: 'Inter', color: scheme.strongDarkGray}}>Journal</Text>
-              </View>
-        <View style={styles.headerContainer}>
-        {/* <TouchableOpacity onPress={() => setDateIncrement(dateIncrement-1)}>
-                <View style={styles.incrementButtonContainer}>
-                  <Ionicons name="return-up-back" size={height/27} color="#F5F5F5"/>
-                </View>
-        </TouchableOpacity>    */}
-        <Text style={styles.dateText}>{localTime.toFormat('cccc LLLL d')}</Text>
-        {/* <TouchableOpacity onPress={() => setDateIncrement(dateIncrement+1)}>
-              <View style={styles.incrementButtonContainer}>
-                <Ionicons name="return-up-forward" size={height/27} color="#F5F5F5"/>
-              </View>
-        </TouchableOpacity> */}
-        </View>
-        {/* {showAuth ? <CalendarConnect authToken={authToken} setAuthToken={setAuthToken} /> : <></>} */}
-        {/* <CalendarInformation authToken={authToken}/> */}
-        {/* <ScrollView style={{ padding: 20 }}>
-          <Button title="Refresh Suggestions" onPress={loadSuggestions} />
-          {error && <Text style={{ color: "red" }}>Error: {error}</Text>}
-
-            <View style={{ marginVertical: 10 }}>
-              <Text style={{color: 'white'}}>📌 {suggestion!=null ? suggestion.text : "No Suggestion"}</Text>
-            </View>
-      </ScrollView> */}
-      {/* <Button
-        title="Show Suggestions Picker"
-        onPress={handleShowPicker}
-      /> */}
-      
-        {suggestion!=null && (
-          <View style={styles.suggestionContainer}>
-            <Text style={styles.suggestionText}>
-              Selected: {suggestion.text}
-            </Text>
-            {/* {suggestions.category && (
-              <Text>Category: {suggestions.category}</Text>
-            )} */}
+        {/* Layout Start */}
+        <View style={layout_styles.contentContainer} >
+          <View style={layout_styles.titleContainer}>
+            <Text style={font_styles.headerStyle}>Journal</Text>
           </View>
-        )}
-        {withSunriseSunset.length>0 ? 
-        <KeyboardAvoidingView 
-        behavior= {'padding'}
-        keyboardVerticalOffset={80} 
-        style={{marginBottom: 80}}>
+          <View style={layout_styles.headerContainer}>
+            {/* <TouchableOpacity onPress={() => setDateIncrement(dateIncrement-1)}>
+                    <View style={styles.incrementButtonContainer}>
+                      <Ionicons name="return-up-back" size={height/27} color="#F5F5F5"/>
+                    </View>
+            </TouchableOpacity>    */}
+            <Text style={styles.dateText}>{localTime.toFormat('cccc LLLL d')}</Text>
+            {/* <TouchableOpacity onPress={() => setDateIncrement(dateIncrement+1)}>
+                  <View style={styles.incrementButtonContainer}>
+                    <Ionicons name="return-up-forward" size={height/27} color="#F5F5F5"/>
+                  </View>
+            </TouchableOpacity> */}
+          </View>
+          {/* {showAuth ? <CalendarConnect authToken={authToken} setAuthToken={setAuthToken} /> : <></>} */}
+          {/* <CalendarInformation authToken={authToken}/> */}
+          {/* <ScrollView style={{ padding: 20 }}>
+            <Button title="Refresh Suggestions" onPress={loadSuggestions} />
+            {error && <Text style={{ color: "red" }}>Error: {error}</Text>}
 
-        <FlatList 
-        ref={flatListRef}
-        data={withSunriseSunset}
-        renderItem={({ item }) => <ActivityItem activity={item} onRemove={remove} timeState={isTimeTapped} dateIncrement={dateIncrement} updateActivity={updateActivity} moveActivity={moveActivity} onTimeTap={timeTapped} onTap={activityTapped}/>}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContent}
-        />
-        </KeyboardAvoidingView>
-          : <>
-            {/* <ThemedText type="subtitle">
-              Add Your First Activity For The Day!
-            </ThemedText> */}
-          </>}
+              <View style={{ marginVertical: 10 }}>
+                <Text style={{color: 'white'}}>📌 {suggestion!=null ? suggestion.text : "No Suggestion"}</Text>
+              </View>
+        </ScrollView> */}
+        {/* <Button
+          title="Show Suggestions Picker"
+          onPress={handleShowPicker}
+        /> */}
+        
+          {suggestion!=null && (
+            <View style={styles.suggestionContainer}>
+              <Text style={styles.suggestionText}>
+                Selected: {suggestion.text}
+              </Text>
+              {/* {suggestions.category && (
+                <Text>Category: {suggestions.category}</Text>
+              )} */}
+            </View>
+          )}
+          {withSunriseSunset.length>0 ? 
+          <KeyboardAvoidingView 
+          behavior= {'padding'}
+          keyboardVerticalOffset={80} 
+          style={{marginBottom: 80}}>
+
+          <FlatList 
+          ref={flatListRef}
+          data={withSunriseSunset}
+          renderItem={({ item }) => <ActivityItem activity={item} onRemove={remove} timeState={isTimeTapped} dateIncrement={dateIncrement} updateActivity={updateActivity} moveActivity={moveActivity} onTimeTap={timeTapped} onTap={activityTapped}/>}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContent}
+          />
+          </KeyboardAvoidingView>
+            : <>
+              {/* <ThemedText type="subtitle">
+                Add Your First Activity For The Day!
+              </ThemedText> */}
+            </>}
         </View>
         {/* <View style={styles.calendarButtonContainer}>
           <TouchableOpacity onPress={toggleNoStartModal}>
@@ -461,7 +296,7 @@ const styles = StyleSheet.create({
 },
 contentContainer: {
   flex: 1,
-  paddingBottom: height/9, // Space at the bottom to accommodate the button
+  paddingBottom: '10%', // Space at the bottom to accommodate the button
 },
 headerContainer: {
   marginHorizontal: width/13,
@@ -493,67 +328,13 @@ listContent: {
   gap: 15,
   paddingHorizontal: 36,
 },
-activityContainer: {
-  flex: 1,
-  backgroundColor: scheme.white,
-  borderRadius: 12,
-  padding: 15,
-  gap: 30,
-  // marginTop: 10,
-  borderColor: scheme.cardBorder,
-  borderWidth: 0.1,
-  shadowColor: '#000000',
-  shadowOpacity: 0.1,
-  shadowRadius: 10,
-  shadowOffset: { width: 0, height: 4 },
-  flexDirection: 'row',
-  alignItems: 'center',
-},
-category: { 
-  fontSize: 15,
-  color: 'red',
-},
 detailsContainer: {
   flex: 1, // Allows this section to take up the remaining space
-},
-allTouchables: {
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  gap: 10,
-},
-touchableActivity: {
-  // flexShrink: 1,
-  // flexWrap: 'nowrap',
-  // marginHorizontal: 2,
-
 },
 indexCategories: {
   marginLeft: 'auto'
 },
-touchableDelete: {
-  marginLeft: 'auto'
-},
-touchableTime: {
 
-},
-timeContainer: {
-  flexDirection: 'row',
-  flexWrap: 'nowrap',
-  // borderColor: 'yellow',
-  // borderWidth: 3
-},
-timeText: {
-  fontSize: 13,
-  flexWrap: 'nowrap',
-  color: scheme.mutedDarkGray || '#666666', // Fallback to ensure mutedDarkGray is applied
-},
-activityName: {
-  flex: 3,
-  fontSize: 16,
-  fontWeight: 'bold',
-  color: scheme.strongDarkGray
-},
 durationModal: {
   flex: 1
 },

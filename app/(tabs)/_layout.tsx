@@ -1,8 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons'; // Correct import for Ionicons with Expo
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import scheme from '@/utils/colorScheme';
 import { Dimensions } from 'react-native';
 
