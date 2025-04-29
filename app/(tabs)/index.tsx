@@ -16,7 +16,7 @@ import CalendarConnect from '@/components/CalendarConnect';
 import CalendarInformation from '@/components/CalendarInformation'
 import {storage} from '@/utils/mmkvStorage';
 import { fetchSuggestion, JournalSuggestion, showSuggestionsPicker } from "@/components/JournalingSuggestions";
-
+import scheme from '@/utils/colorScheme';
 
 import { getSunriseSunset, generateISODate } from '@/utils/DateTimeUtils';
 
@@ -121,15 +121,17 @@ const ActivityItem = ({ activity, onRemove, timeState, dateIncrement, updateActi
     // Add more categories and corresponding JSX elements here
   };
   const getActivityContainerStyle = () => {
-    if (specialButton) {
-      return styles2.activityContainer;
-    } else if (sunrise) {
-      return styles3.activityContainer;
-    } else if (rout) {
-      return styles4.activityContainer;
-    } else {
-      return styles.activityContainer;
-    }
+    // if (specialButton) {
+    //   return styles2.activityContainer;
+    // } else if (sunrise) {
+    //   return styles3.activityContainer;
+    // } else if (rout) {
+    //   return styles4.activityContainer;
+    // } else {
+    //   return styles.activityContainer;
+    // }
+    return styles.activityContainer;
+
   }
   
   return (
@@ -138,52 +140,56 @@ const ActivityItem = ({ activity, onRemove, timeState, dateIncrement, updateActi
 
         <View style={getActivityContainerStyle()}>
           <TouchableOpacity onPress={() => onTap(activity)} style={styles.allTouchables}>
-        <TouchableOpacity onPress={() => onTimeTap(activity)} style={styles.touchableTime}>
-          <View style={styles.timeContainer}>
-            {(timeState[0] && activity.id==timeState[1]) ? 
-            (
-              <>
-                <TextInput         
-                value={inputValue}
-                onChangeText={handleInputChange}
-                maxLength={maxLength}
-                keyboardType="default" 
-                onSubmitEditing={() => HandleSubmitEditing(inputValue, input2Value, maxLength, activity, dateIncrement, updateActivity, moveActivity)}
-                returnKeyType="done"
-                style={styles.timeText} />
-                <Text style={styles.timeText}> - </Text>
-                <TextInput         
-                value={input2Value}
-                onChangeText={handleInput2Change}
-                maxLength={maxLength}
-                keyboardType="default"
-                onSubmitEditing={() => HandleSubmitEditing(inputValue, input2Value, maxLength, activity, dateIncrement, updateActivity, moveActivity)}
-                returnKeyType="done" 
-                style={styles.timeText} />
-              </>
-            ) : 
-            (
-            <><Text style={styles.timeText}>{convertUnixToTimeString(activity.timeBlock.startTime, activity.timeBlock.endTime, false)}</Text>
-              <Text style={styles.timeText}> - </Text>
-              <Text style={styles.timeText}>{convertUnixToTimeString(activity.timeBlock.endTime, 0, false)}</Text></>
-            )}
-          </View>
-        </TouchableOpacity>
-        <View style={Cat.length>0 ? [styles.touchableActivity, {maxWidth: 150}] : styles.touchableActivity}>
-          <Text style={styles.activityName}>{activity.button.text}</Text>
-          </View>
-          <View style={styles.indexCategories}>
-          {Cat.length>0 ? Cat.map((cat) => (
-              <View key={cat}>
-                {iconMapping[cat] || <Feather name="help-circle" style={styles.category} />}
+            <TouchableOpacity onPress={() => onTimeTap(activity)} style={styles.touchableTime}>
+              <View style={styles.timeContainer}>
+                {(timeState[0] && activity.id==timeState[1]) ? 
+                (
+                  <>
+                    <TextInput         
+                    value={inputValue}
+                    onChangeText={handleInputChange}
+                    maxLength={maxLength}
+                    keyboardType="default" 
+                    onSubmitEditing={() => HandleSubmitEditing(inputValue, input2Value, maxLength, activity, dateIncrement, updateActivity, moveActivity)}
+                    returnKeyType="done"
+                    style={styles.timeText} />
+                    <Text style={styles.timeText}> - </Text>
+                    <TextInput         
+                    value={input2Value}
+                    onChangeText={handleInput2Change}
+                    maxLength={maxLength}
+                    keyboardType="default"
+                    onSubmitEditing={() => HandleSubmitEditing(inputValue, input2Value, maxLength, activity, dateIncrement, updateActivity, moveActivity)}
+                    returnKeyType="done" 
+                    style={styles.timeText} />
+                  </>
+                ) : 
+                (
+                <>
+                  <Text style={styles.timeText}>{convertUnixToTimeString(activity.timeBlock.startTime, activity.timeBlock.endTime, false)}</Text>
+                    <Text style={styles.timeText}> - </Text>
+                    <Text style={styles.timeText}>{convertUnixToTimeString(activity.timeBlock.endTime, 0, false)}
+                  </Text>
+                </>
+                )}
               </View>
-            )) : <></>}  
+            </TouchableOpacity>
+
+            <View style={styles.touchableActivity}>
+              <Text style={styles.activityName}>{activity.button.text}</Text>
             </View>
-      <TouchableOpacity onPress={() => onRemove(activity)} style={styles.touchableDelete}>
-        <MaterialIcons name="delete" size={width / 15} color="grey" />
-      </TouchableOpacity>
-      </TouchableOpacity>
-    </View>
+              {/* <View style={styles.indexCategories}>
+              {Cat.length>0 ? Cat.map((cat) => (
+                  <View key={cat}>
+                    {iconMapping[cat] || <Feather name="help-circle" style={styles.category} />}
+                  </View>
+                )) : <></>}  
+                </View> */}
+          {/* <TouchableOpacity onPress={() => onRemove(activity)} style={styles.touchableDelete}>
+            <MaterialIcons name="delete" size={width / 15} color="grey" />
+          </TouchableOpacity> */}
+        </TouchableOpacity>
+      </View>
     </View>
 );}
 
@@ -366,35 +372,35 @@ function Journal() {
         <NoStartTimeModal visible={noStartModalVisible} onClose={() => setNoStartModalVisible(false)} remove={remove} otherArray={noEnd}/>
         <View style={styles.contentContainer} >
               <View style={{alignItems: 'center'}}>
-                <ThemedText type="titleText" style={{fontSize: width/12}}>Journal</ThemedText>
+                <Text style={{fontSize: width/12, fontFamily: 'Inter', color: scheme.strongDarkGray}}>Journal</Text>
               </View>
         <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => setDateIncrement(dateIncrement-1)}>
+        {/* <TouchableOpacity onPress={() => setDateIncrement(dateIncrement-1)}>
                 <View style={styles.incrementButtonContainer}>
                   <Ionicons name="return-up-back" size={height/27} color="#F5F5F5"/>
                 </View>
-        </TouchableOpacity>   
-        <ThemedText type="subtitle" style={styles.titleContainer}>{localTime.toFormat('cccc')}</ThemedText>
-        <TouchableOpacity onPress={() => setDateIncrement(dateIncrement+1)}>
+        </TouchableOpacity>    */}
+        <Text style={styles.dateText}>{localTime.toFormat('cccc LLLL d')}</Text>
+        {/* <TouchableOpacity onPress={() => setDateIncrement(dateIncrement+1)}>
               <View style={styles.incrementButtonContainer}>
                 <Ionicons name="return-up-forward" size={height/27} color="#F5F5F5"/>
               </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         </View>
         {/* {showAuth ? <CalendarConnect authToken={authToken} setAuthToken={setAuthToken} /> : <></>} */}
         {/* <CalendarInformation authToken={authToken}/> */}
-        <ScrollView style={{ padding: 20 }}>
+        {/* <ScrollView style={{ padding: 20 }}>
           <Button title="Refresh Suggestions" onPress={loadSuggestions} />
           {error && <Text style={{ color: "red" }}>Error: {error}</Text>}
 
             <View style={{ marginVertical: 10 }}>
               <Text style={{color: 'white'}}>📌 {suggestion!=null ? suggestion.text : "No Suggestion"}</Text>
             </View>
-      </ScrollView>
-      <Button
+      </ScrollView> */}
+      {/* <Button
         title="Show Suggestions Picker"
         onPress={handleShowPicker}
-      />
+      /> */}
       
         {suggestion!=null && (
           <View style={styles.suggestionContainer}>
@@ -426,21 +432,21 @@ function Journal() {
             </ThemedText> */}
           </>}
         </View>
-        <View style={styles.calendarButtonContainer}>
+        {/* <View style={styles.calendarButtonContainer}>
           <TouchableOpacity onPress={toggleNoStartModal}>
             <AntDesign name="calendar" size={width/8} color="grey" />
           </TouchableOpacity>
-        </View>
+        </View> */}
         <View style={styles.plusButtonContainer}>
           <TouchableOpacity onPress={toggleModal}>
-            <AntDesign name="pluscircle" size={width/6.25} color="#F5F5F5" />
+            <AntDesign name="pluscircle" size={width/5} color={scheme.plusButton} />
           </TouchableOpacity>
         </View>
-        <View style={styles.otherButtonContainer}>
+        {/* <View style={styles.otherButtonContainer}>
           <TouchableOpacity onPress={toggleNoStartModal}>
             <MaterialIcons name="other-houses" size={width/8} color="grey" />
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
   );
 }
@@ -449,8 +455,8 @@ const styles = StyleSheet.create({
  //colors darkcyan, mintcream, bisque
  layoutContainer: {
   flex: 1,
-  paddingTop: height/18,
-  backgroundColor: '#1B1B1B',
+  paddingTop: height/10,
+  backgroundColor: scheme.background,
   position: 'relative', // Container must be relative for absolute positioning of child
 },
 contentContainer: {
@@ -460,14 +466,18 @@ contentContainer: {
 headerContainer: {
   marginHorizontal: width/13,
   flexDirection: 'row',
-  justifyContent: 'space-between',
+  justifyContent: 'center',
   alignItems: 'center',
 },
-titleContainer: {
-  padding: 10,
+dateText: {
+  paddingTop: height/30,
+  paddingBottom: height/40,
+  color: scheme.mutedDarkGray, // Fallback to ensure mutedDarkGray is applied
+  fontSize: width/20,
+  textAlign: 'center',
 },
 dateContainer: {
-  alignItems: 'center'
+  alignItems: 'center',
 },
 incrementButtonContainer: {
   backgroundColor: '#1B1B1B'
@@ -478,17 +488,21 @@ container: {
   paddingTop: 20,
 },
 listContent: {
-  paddingHorizontal: 20,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 15,
+  paddingHorizontal: 36,
 },
 activityContainer: {
   flex: 1,
-  backgroundColor: '#fff',
-  borderRadius: 2,
+  backgroundColor: scheme.white,
+  borderRadius: 12,
   padding: 15,
+  gap: 30,
   // marginTop: 10,
-  borderColor: 'lightgrey',
+  borderColor: scheme.cardBorder,
   borderWidth: 0.1,
-  shadowColor: '#000',
+  shadowColor: '#000000',
   shadowOpacity: 0.1,
   shadowRadius: 10,
   shadowOffset: { width: 0, height: 4 },
@@ -504,12 +518,14 @@ detailsContainer: {
 },
 allTouchables: {
   flex: 1,
-  flexDirection: 'row',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  gap: 10,
 },
 touchableActivity: {
-  flexShrink: 1,
-  flexWrap: 'nowrap',
-  marginHorizontal: 2,
+  // flexShrink: 1,
+  // flexWrap: 'nowrap',
+  // marginHorizontal: 2,
 
 },
 indexCategories: {
@@ -530,14 +546,13 @@ timeContainer: {
 timeText: {
   fontSize: 13,
   flexWrap: 'nowrap',
-  color: 'grey',
+  color: scheme.mutedDarkGray || '#666666', // Fallback to ensure mutedDarkGray is applied
 },
 activityName: {
-  paddingLeft: 15,
   flex: 3,
   fontSize: 16,
   fontWeight: 'bold',
-  color: '#F5F5F5'
+  color: scheme.strongDarkGray
 },
 durationModal: {
   flex: 1
@@ -545,8 +560,8 @@ durationModal: {
 plusButtonContainer: {
     position: 'absolute', // Absolute positioning to overlay everything
     bottom: height/40.6, // Space from the bottom of the container
-    left: (width / 2) - (buttonWidth / 2), // Center horizontally more precisely
-    width: buttonWidth
+    alignSelf: 'center',
+    // width: buttonWidth
 },
 calendarButtonContainer: {
   position: 'absolute', // Absolute positioning to overlay everything
