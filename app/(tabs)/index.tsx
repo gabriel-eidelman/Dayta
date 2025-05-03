@@ -197,7 +197,12 @@ function Journal() {
         }
       }
     }
-    
+    const handleAppleTrigger = () => {
+      setAddHabitModalVisible(false); // Dismiss RN modal
+      setTimeout(async () => {
+        await handleShowPicker(); // Call native UI after modal is gone
+      }, 300); // Wait for animation to finish
+    }
     const toggleNoStartModal = () => {
       setNoStartModalVisible(true);
     }
@@ -205,7 +210,7 @@ function Journal() {
     //addHabitModalVisible ? {opacity: 0.4} : {opacity: 1}
       <View style={[layout_styles.layoutContainer]}>
         {/* Global Modals */}
-        <AddHabitModal isOpen={addHabitModalVisible} onApplePickerPress={() => {handleShowPicker()}} onCustomHabitPress={() => {setModalVisible(true)}} onClose={toggleAddHabitModal} />
+        <AddHabitModal isOpen={addHabitModalVisible} onApplePickerPress={handleAppleTrigger} onCustomHabitPress={() => {setModalVisible(true)}} onClose={toggleAddHabitModal} />
         {activityInfo && (<ActivityDescribeModal style={styles.durationModal} ActivityDescribeVisible={activityDescribeVisible} Info={activityInfo as Activity} onClose={() => setActivityDescribeVisible(false)} onTapOut={() => setActivityDescribeVisible(false)}/>)}
         <NoStartTimeModal visible={noStartModalVisible} onClose={() => setNoStartModalVisible(false)} remove={remove} otherArray={noEnd}/>
         <MyModal visible={modalVisible} onClose={toggleModal} />
@@ -237,21 +242,17 @@ function Journal() {
                 <Text style={{color: 'white'}}>📌 {suggestion!=null ? suggestion.text : "No Suggestion"}</Text>
               </View>
         </ScrollView> */}
-        {/* <Button
-          title="Show Suggestions Picker"
-          onPress={handleShowPicker}
-        /> */}
         
-          {suggestion!=null && (
+          {/* {suggestion!=null && (
             <View style={styles.suggestionContainer}>
               <Text style={styles.suggestionText}>
                 Selected: {suggestion.text}
-              </Text>
+              </Text> */}
               {/* {suggestions.category && (
                 <Text>Category: {suggestions.category}</Text>
               )} */}
-            </View>
-          )}
+            {/* </View>
+          )} */}
           {withSunriseSunset.length>0 ? 
           <KeyboardAvoidingView 
           behavior= {'padding'}
