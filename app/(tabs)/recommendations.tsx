@@ -10,6 +10,8 @@ import Swiper from 'react-native-deck-swiper';
 import LogicModal from '@/components/Modals/LogicModal'
 import CustomButton from '@/components/Custom/CustomButton'
 import {PremadeCards} from '@/Data/PremadeCards'
+import layout_styles from '@/styles/reusable/layoutStyles';
+import font_styles from '@/styles/reusable/typography';
 
 //import firestore from '@react-native-firebase/firestore'
 
@@ -173,10 +175,12 @@ export default function Recommendations() {
   };
 
   return (
-    <View style={styles.layoutContainer}>
+    <View style={layout_styles.layoutContainer}>
+      {/* Modals */}
       <LogicModal visible={logicModalVisible} card={cards[cardIndex]} onClose={() => setLogicModalVisible(false)}/>
-      <View style={styles.titleContainer}>
-        <ThemedText type="titleText" style={{fontSize: width/12}}>Recommendations</ThemedText>
+
+      <View style={layout_styles.titleContainer}>
+        <Text style={font_styles.headerStyle}>Recommendations</Text>
       </View>
       <SafeAreaView style={{flex: 1}}>
         <Swiper
@@ -280,9 +284,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   recContainer: {
-    borderColor: 'orange',
-    borderWidth: 2,
-    borderRadius: 20,
+    // borderColor: 'orange',
+    // borderWidth: 2,
+    // borderRadius: 20,
     padding: 20
   },
   recTitle: {

@@ -1,5 +1,8 @@
 import { StyleSheet} from "react-native";
 import scheme from "@/utils/colorScheme";
+import { Dimensions } from "react-native";
+
+const { height } = Dimensions.get("window");
 
 const layout_styles = StyleSheet.create({
     //colors darkcyan, mintcream, bisque
@@ -26,6 +29,12 @@ const layout_styles = StyleSheet.create({
    dateContainer: {
      alignItems: 'center',
    },
+   plusButtonContainer: {
+    position: 'absolute', // Absolute positioning to overlay everything
+    bottom: height/40.6, // Space from the bottom of the container
+    alignSelf: 'center',
+    // width: buttonWidth
+  },
    incrementButtonContainer: {
      backgroundColor: '#1B1B1B'
    },

@@ -5,6 +5,8 @@ import {useRouter} from 'expo-router'
 import {ThemedText} from '@/components/ThemedText'
 import {Button} from '@rneui/themed'
 import { useAppContext } from '@/contexts/AppContext';
+import layout_styles from '@/styles/reusable/layoutStyles';
+import font_styles from '@/styles/reusable/typography';
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,10 +31,9 @@ const Settings = () => {
   const logout = useLogout();
   const router = useRouter();
   return (
-    <View style={styles.container}>
-      <View>
-      <View style={styles.titleContainer}>
-        <ThemedText type="titleText" style={{fontSize: width/12}}>Settings</ThemedText>
+    <View style={layout_styles.layoutContainer}>
+      <View style={layout_styles.titleContainer}>
+        <Text style={font_styles.headerStyle}>Settings</Text>
       </View>
       {/* <View style={styles.settingItem}>
         <ThemedText type="journalText" style={styles.settingLabel}>Dark Mode</ThemedText>
@@ -59,7 +60,6 @@ const Settings = () => {
       </View>
       <View style={styles.settingItem}>
       <Button color="#F5F5F5" title="Update" titleStyle={{ color: '#1B1B1B' }} onPress={() => setUpdateLocalStorage(true)} />
-      </View>
       </View>
     </View>
   );

@@ -11,11 +11,13 @@ import uuid from 'react-native-uuid'
 import CustomButton from '@/components/Custom/CustomButton'
 import { MaterialIcons, AntDesign } from '@expo/vector-icons'
 import CustomActivityEdit from '@/components/Modals/CustomActivityEdit'
+import layout_styles from '@/styles/reusable/layoutStyles';
+import font_styles from '@/styles/reusable/typography';
+import pickerSelectStyles from '@/utils/pickerSelectStyles'
+import personalizeStyles from '@/styles/personalizeStyles'
+import scheme from '@/utils/colorScheme'
 
-const {width, height} = Dimensions.get("window");
-const buttonWidth = width/5;
-const buttonHeight = height/19;
-const titleWidth = width/1.5;
+const {width} = Dimensions.get("window");
 
 function Personalize() {
     const {addCustomActivity, addCustomRoutine, customActivities, customRoutines, removeCustomAct, removeRoutine, updateRoutine} = useAppContext();
@@ -33,6 +35,7 @@ function Personalize() {
     const [customActInfo, setCustomActInfo] = useState<ButtonState>()
     const [customActEditVisible, setCustomActEditVisible] = useState<boolean>(false);
     const [tappedRout, setTappedRout] = useState<Routine>()
+    const alphabeticalActs = customActivities.sort((a, b) => a.text.localeCompare(b.text));
 
     useEffect(() => {
       if(customActInfo) {
@@ -186,387 +189,49 @@ function Personalize() {
         }
       
     }
-    const renderContent = () => {
-      if (pageType === "Create" && value === 'Activity') {
-        return (
-          <View style={styles.container}>
-          <View style={styles.textSection}>
-          <View style={{alignItems: 'center'}}>
-            <Text style={styles.inputTitle}>Create Custom Activity</Text>
-          </View>
-          <View style={styles.textContainer}>
-          <ThemedText type="subtitle">Activity Name: </ThemedText>
-          <View style={styles.inputText}>
-          <TextInput value={inputText} 
-              onChangeText={handleInputChange}
-              maxLength={30}
-              keyboardType="default" 
-              // onSubmitEditing={() => handleSubmit(newButton)}
-              returnKeyType="done"
-              style={styles.textInputContainer}
-          />
-          </View>
-          </View>
-        </View>
-        <View style={styles.tagSection}>
-          <ThemedText type="subtitle">Add Tags: </ThemedText>
-            <View style={styles.tagsContainer}>
-              <View style={styles.tagStyle}>
-              <TagDropdown tagValue={tag1Value} setTagValue={setTag1Value}/>
-              </View>
-              <View style={styles.tagStyle}>
-              <TagDropdown tagValue={tag2Value} setTagValue={setTag2Value}/>
-              </View>
-            </View>
-         </View>
-        <View style={styles.createContainer}>
-            <TouchableOpacity onPress={handleSubmit} style={styles.closeButton}>
-              <Text style={styles.buttonText}>Create Activity</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        );
-      } else if (pageType === "Create" && value === 'Routine') {
-        return (
-          <View style={styles.container}>
-          <View style={styles.textSection}>
-            <View style={{alignItems: 'center'}}>
-              <Text style={styles.inputTitle}>Create Custom Routine</Text>
-            </View>
-            <View style={styles.textContainer}>
-            <ThemedText type="subtitle">Routine Name: </ThemedText>
-            <View style={styles.inputText}>
-            <TextInput value={routineName} 
-                onChangeText={handleRoutineInputChange}
-                maxLength={30}
-                keyboardType="default" 
-                // onSubmitEditing={() => handleSubmit(newButton)}
-                returnKeyType="done"
-                style={styles.textInputContainer}
-            />
-            </View>
-            </View>
-          </View>
-          <View style={styles.setUp}>
-            <ThemedText type="subtitle">Set Up Routine: </ThemedText>
-            {/* <TouchableOpacity style={styles.addRoutineButton} onPress={() => setCreateRoutineModalVisible(true)}> */}
-              <CustomButton title="Add Activities" color="#ADD8E6" width={width*0.5} onPress={() => setCreateRoutineModalVisible(true)}/>
-          </View>
-          <View style={styles.createContainer}>
-              <TouchableOpacity onPress={() => handleRoutineSubmit()} style={styles.closeButton}>
-                <Text style={styles.buttonText}>Create Routine</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        );
-      } else if (pageType === "Edit" && value === 'Activity') {
-        const alphabeticalActs = customActivities.sort((a, b) => a.text.localeCompare(b.text));
-        return (
-          <View style={styles.container}>
-              <FlatList
-                ref={flatListRef}
-                data={alphabeticalActs}
-                keyExtractor={(item) => item.text}
-                style={styles.flatList}
-                renderItem={({ item}) => ( 
-                  <TouchableOpacity onPress={() => customActTapped(item)}>
-                  <View style={styles.resultContainer}>
-
-                      
-                        <Text style={{fontWeight: 'bold'}}>{item.text}</Text>  
-
-                        <AntDesign name="edit" size={width / 15} color="orange" />
-
-                        <TouchableOpacity onPress={() => deleteCustomActivity(item)} style={styles.touchableDelete}>
-                        <MaterialIcons name="delete" size={width / 15} color="black" />
-                      </TouchableOpacity>
-                    
-                  </View>
-                  </TouchableOpacity>
-                )}
-              />
-          </View>
-        );
-      } else if (pageType === "Edit" && value === 'Routine') {
-        return (
-          <View style={styles.container}>
-              <FlatList
-                ref={flatListRef}
-                data={customRoutines}
-                keyExtractor={(item) => item.name}
-                style={styles.flatList}
-                renderItem={({ item}) => ( 
-                  <TouchableOpacity onPress={() => customRoutTapped(item)}>
-                  <View style={styles.resultContainer}>
-
-                      
-                        <Text style={{fontWeight: 'bold'}}>{item.name}</Text>  
-
-                        <AntDesign name="edit" size={width / 15} color="orange" />
-
-                        <TouchableOpacity onPress={() => deleteCustomRoutine(item)} style={styles.touchableDelete}>
-                        <MaterialIcons name="delete" size={width / 15} color="black" />
-                      </TouchableOpacity>
-                    
-                  </View>
-                  </TouchableOpacity>
-                )}
-              />
-          </View>
-        );
-      } else {
-        return null;
-      }
-    };
     
     return (
       <>
       {/* <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}> */}
-        <View style={styles.modalOverlay}>
-        {customActInfo && (<CustomActivityEdit style={styles.editModal} ActivityDescribeVisible={customActEditVisible} Info={customActInfo as ButtonState} onClose={() => setCustomActEditVisible(false)} onTapOut={() => setCustomActEditVisible(false)}/>)}
+        <View style={layout_styles.layoutContainer}>
+
+          {/* Start Of Layout */}
+          <View style={layout_styles.contentContainer} >
+
+          <View style={layout_styles.titleContainer}>
+            <Text style={font_styles.headerStyle}>Personalization</Text>
+          </View>
+          <View style={personalizeStyles.habitListContainer}>
+            <FlatList
+              ref={flatListRef}
+              data={alphabeticalActs}
+              keyExtractor={(item) => item.text}
+              style={personalizeStyles.flatList}
+              renderItem={({ item}) => ( 
+                <TouchableOpacity onPress={() => customActTapped(item)}>
+                  <View style={personalizeStyles.resultContainer}>
+                      <Text style={font_styles.activityName}>{item.text}</Text>  
+                      {/* <AntDesign name="edit" size={width / 15} color="orange" />
+                      <TouchableOpacity onPress={() => deleteCustomActivity(item)} style={personalizeStyles.touchableDelete}>
+                      <MaterialIcons name="delete" size={width / 15} color="black" />
+                    </TouchableOpacity> */}
+                </View>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        </View>
+        <View style={layout_styles.plusButtonContainer}>
+          {/* <TouchableOpacity onPress={toggleModal}> */}
+            <AntDesign name="pluscircle" size={width/5} color={scheme.plusButton} />
+          {/* </TouchableOpacity> */}
+        </View>
+         {/* Modals */}
+         {customActInfo && (<CustomActivityEdit style={personalizeStyles.editModal} ActivityDescribeVisible={customActEditVisible} Info={customActInfo as ButtonState} onClose={() => setCustomActEditVisible(false)} onTapOut={() => setCustomActEditVisible(false)}/>)}
           <CreateRoutineModal style={{}} MultitaskModalVisible={createRoutineModalVisible} onNext={handleSubmitRoutineModal} customRoutine={tappedRout} onTapOut={() => setCreateRoutineModalVisible(false)}/>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.titleContainer}>
-              <ThemedText type="titleText" style={{fontSize: width/12}}>Personalization</ThemedText>
-          </View>
-          </TouchableWithoutFeedback>
-          <View style={styles.startButtons}>
-            <CustomButton title="Activity" width={width*0.4} onPress={() => setValue('Activity')} />
-            <CustomButton title="Routine" width={width*0.4} onPress={() => setValue('Routine')}/>
-          </View>
-          
-          <View style={styles.renderButtons}>
-            {renderContent()}
-          </View>
-          <View style={styles.endButtons}>
-            <CustomButton title="Create" width={width*0.4} onPress={() => {setTappedRout(undefined); setPageType("Create")}} />
-            <CustomButton title="Edit" width={width*0.4} onPress={() => {setPageType("Edit")}} />
-          </View>
         </View> 
-        {/* </TouchableWithoutFeedback> */}
         </>
     )
 }
 
-interface TagDropdownProps {
-    setTagValue: Dispatch<SetStateAction<string>>;
-    tagValue: string;
-  }
-  const TagDropdown: React.FC<TagDropdownProps> = ({ tagValue, setTagValue }) => {
-    const tags = [
-      { label: 'Food/Drink', value: 'Food/Drink'},
-      { label: 'Physical', value: 'Physical' },
-      { label: 'Relax', value: 'Relax' },
-      { label: 'Music', value: 'Music' },
-      { label: 'Entertainment', value: 'Entertainment' },
-      { label: 'Social', value: 'Social' },
-      { label: 'Work/Study', value: 'Work/Study' },
-      { label: 'Travel/Commute', value: 'Travel/Commute' },
-      { label: 'Hobbies', value: 'Hobbies' },
-      { label: 'Chores', value: 'Chores' },
-      { label: 'Self-Improvement', value: 'Self-Improvement' },
-      {label: 'Family Time', value: 'Family Time'},
-      { label: 'Helping Others', value: 'Helping Others' },
-      {label: 'Intaking Knowledge', value: 'Intaking Knowledge'},
-      { label: 'Other', value: 'Other' },
-    ]
-    
-    return (
-      <View style={{padding: 5}}>
-      <RNPickerSelect
-        onValueChange={(value) => setTagValue(value)}
-        items={tags}
-        style={{
-          ...pickerSelectStyles,
-          placeholder: {
-            color: 'black',  // Set the color of the placeholder text
-          },
-        }}
-        value={tagValue}
-        useNativeAndroidPickerStyle={false} // Important for custom styles on Android
-        placeholder={{
-          label: 'Select a tag',
-          value: null,
-          color: 'black',
-        }}
-      />
-    </View>
-    );
-  };
-
-  const pickerSelectStyles = {
-    inputIOS: {
-      // Customize the selected text color for iOS
-      color: 'green', // Change this to your desired color
-      // You can add more styling here if needed
-      fontSize: 17,
-      paddingVertical: 3,
-      paddingHorizontal: 10,
-      // borderWidth: 1,
-      // borderColor: 'gray',
-      // borderRadius: 4,
-      // backgroundColor: 'white',
-    },
-    inputAndroid: {
-      // Customize the selected text color for Android
-      color: '#F5F5F5', // Change this to your desired color
-      // Additional styling options
-      fontSize: 16,
-      paddingHorizontal: 10,
-      paddingVertical: 2,
-      borderWidth: 0.5,
-      borderColor: 'purple',
-      borderRadius: 8,
-      backgroundColor: 'white',
-    },
-  };
-
-// const Personalize: React.FC = () => {
-//     return (
-//       <AppProvider>
-//         <Logic />
-//       </AppProvider>
-//     );
-//   };
-  
   export default Personalize;
-
-  const styles = StyleSheet.create({
-    modalOverlay: {
-      flex: 1,
-      backgroundColor: '#1B1B1B',
-      paddingTop: height/18,
-      position: 'relative'
-    },
-     titleContainer: {
-      flex: 1,
-      alignItems: 'center',
-      padding: 15
-    },
-    addRoutineButton: {
-      padding: 10,
-      backgroundColor: 'yellow'
-    },
-    editModal: {
-      flex: 1
-    },
-    valueButtonContainer: {
-      flexDirection: 'row',
-      marginVertical: 8,
-      borderColor: 'orange',
-      borderWidth: 2,
-    },
-    renderButtons: {
-      flex: 10,
-    },
-    container: {
-      borderWidth: 4,
-      borderColor: 'orange',
-      borderRadius: 20,
-      flex: 1,
-    },
-    inputTitle: {
-      fontSize: width/16, 
-      color: 'white', 
-      fontStyle: 'italic',
-      alignItems: 'center'
-    },
-    buttonTextContainer: {
-      flex: 1,
-      alignItems: 'flex-start',
-    },
-    textContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-around'
-    },
-    inputText: {
-        // flex: 1,
-        // flexDirection: 'row'
-    },
-    textSection: {
-      // padding: 30,
-      paddingVertical: 20,
-      rowGap: 20,
-      
-    },
-    setUp: {
-    padding: 30,
-    flexDirection: 'row',
-    alignItems: 'center'
-    },
-    tagSection: {
-        rowGap: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        paddingTop: 10,
-        paddingBottom: 30,
-
-    },
-    tagsContainer: {
-      
-    },
-    tagStyle: {
-      borderColor: 'lightblue', 
-      backgroundColor: 'lightblue',
-      borderWidth: 2,
-      borderRadius: 20,
-      // backgroundColor: 'black',
-      padding: 15,
-      margin: 5
-    },
-    createContainer: {
- 
-      alignItems: 'center',
-
-    },
-    closeButton: {
-      backgroundColor: '#F5F5F5', // Example background color
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-      borderRadius: 5,
-    },
-    buttonText: {
-      fontSize: 21,
-      color: '#1B1B1B',
-    },
-    textInputContainer: {
-     backgroundColor: 'white',
-     width: width/2,
-     height: 50,
-    paddingLeft: 15,
-    paddingRight: 15,
-    },
-    startButtons: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      padding: 10,
-    },
-    resultContainer: {
-      flex: 1,
-      backgroundColor: '#fff',
-      borderRadius: 10,
-      padding: 15,
-      marginTop: 10,
-      shadowColor: '#000',
-      shadowOpacity: 0.1,
-      shadowRadius: 10,
-      shadowOffset: { width: 0, height: 4 },
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    touchableDelete: {
-      marginLeft: 'auto'
-    },
-    editIcon: {
-      paddingHorizontal: 20
-    },
-    endButtons: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      padding: 20,
-      paddingBottom: 50,
-    },
-    flatList: {
-      flex: 1,
-    },
-  });

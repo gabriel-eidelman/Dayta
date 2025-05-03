@@ -3,6 +3,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { useState, useEffect, useRef } from 'react';
 import {AntDesign, MaterialIcons, Ionicons, Feather, MaterialCommunityIcons, FontAwesome5} from '@expo/vector-icons';
 import MyModal from '@/components/Modals/MyModal'
+import AddHabitModal from '@/components/Modals/AddHabit'
 import { useAppContext } from '@/contexts/AppContext';
 import {useAuth} from '@/contexts/AuthContext'
 import FetchDayActivities from '@/Data/FetchDayActivities'
@@ -16,8 +17,8 @@ import CalendarInformation from '@/components/CalendarInformation'
 import {storage} from '@/utils/mmkvStorage';
 import { fetchSuggestion, JournalSuggestion, showSuggestionsPicker } from "@/components/JournalingSuggestions";
 import scheme from '@/utils/colorScheme';
-import layout_styles from '@/styles/layoutStyles';
-import font_styles from '@/styles/typography';
+import layout_styles from '@/styles/reusable/layoutStyles';
+import font_styles from '@/styles/reusable/typography';
 import ActivityItem from '@/components/ActivityItem';
 
 import { getSunriseSunset, generateISODate } from '@/utils/DateTimeUtils';
@@ -53,6 +54,7 @@ function Journal() {
   // }, [authToken])
 
   const handleShowPicker = async () => {
+    console.log("showing picker");
     try {
       const selected = await showSuggestionsPicker();
       setSuggestion(selected);
@@ -147,7 +149,7 @@ function Journal() {
   }
   useEffect(() => {
     generateSunriseSunset();
-    // loadSuggestions();
+    loadSuggestions();
 }, [dateIncrement])
   const [activityDescribeVisible, setActivityDescribeVisible] = useState<boolean>(false);
   useEffect(() => {
@@ -163,7 +165,9 @@ function Journal() {
 
   //toggle the state of the modal
     const [modalVisible, setModalVisible] = useState(false);
+    const [addHabitModalVisible, setAddHabitModalVisible] = useState(false);
     const toggleModal = () => {setModalVisible(!modalVisible); setTimedTapped([false, ""]);}
+    const toggleAddHabitModal = () => {setAddHabitModalVisible(!addHabitModalVisible);}
     const flatListRef = useRef<FlatList>(null);
     useEffect(() => {
       const timer = setTimeout(() => {
@@ -198,12 +202,13 @@ function Journal() {
       setNoStartModalVisible(true);
     }
   return (
-    
-      <View style={layout_styles.layoutContainer}>
+    //addHabitModalVisible ? {opacity: 0.4} : {opacity: 1}
+      <View style={[layout_styles.layoutContainer]}>
         {/* Global Modals */}
-        <MyModal visible={modalVisible} onClose={toggleModal} />
+        <AddHabitModal isOpen={addHabitModalVisible} onApplePickerPress={() => {handleShowPicker()}} onCustomHabitPress={() => {setModalVisible(true)}} onClose={toggleAddHabitModal} />
         {activityInfo && (<ActivityDescribeModal style={styles.durationModal} ActivityDescribeVisible={activityDescribeVisible} Info={activityInfo as Activity} onClose={() => setActivityDescribeVisible(false)} onTapOut={() => setActivityDescribeVisible(false)}/>)}
         <NoStartTimeModal visible={noStartModalVisible} onClose={() => setNoStartModalVisible(false)} remove={remove} otherArray={noEnd}/>
+        <MyModal visible={modalVisible} onClose={toggleModal} />
         {/* Layout Start */}
         <View style={layout_styles.contentContainer} >
           <View style={layout_styles.titleContainer}>
@@ -272,8 +277,8 @@ function Journal() {
             <AntDesign name="calendar" size={width/8} color="grey" />
           </TouchableOpacity>
         </View> */}
-        <View style={styles.plusButtonContainer}>
-          <TouchableOpacity onPress={toggleModal}>
+        <View style={layout_styles.plusButtonContainer}>
+          <TouchableOpacity onPress={toggleAddHabitModal}>
             <AntDesign name="pluscircle" size={width/5} color={scheme.plusButton} />
           </TouchableOpacity>
         </View>
@@ -337,12 +342,6 @@ indexCategories: {
 
 durationModal: {
   flex: 1
-},
-plusButtonContainer: {
-    position: 'absolute', // Absolute positioning to overlay everything
-    bottom: height/40.6, // Space from the bottom of the container
-    alignSelf: 'center',
-    // width: buttonWidth
 },
 calendarButtonContainer: {
   position: 'absolute', // Absolute positioning to overlay everything

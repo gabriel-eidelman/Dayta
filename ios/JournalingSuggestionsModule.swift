@@ -13,7 +13,6 @@ import JournalingSuggestions
 
 @objc(JournalSuggestionsModule)
 class JournalSuggestionsModule: NSObject, RCTBridgeModule {
-    
     static func moduleName() -> String {
         return "JournalSuggestionsModule"
     }
@@ -26,6 +25,8 @@ class JournalSuggestionsModule: NSObject, RCTBridgeModule {
   
     @objc
     func presentSuggestionsPicker(_ callback: @escaping RCTResponseSenderBlock) {
+        print("running journalsuggestions")
+
         DispatchQueue.main.async {
             // Get root view controller
             guard let rootViewController = UIApplication.shared.windows.first?.rootViewController else {
@@ -55,7 +56,6 @@ class JournalSuggestionsModule: NSObject, RCTBridgeModule {
         }
     }
     
-    // Your existing fetchSuggestions method
     @objc
     func fetchSuggestions(_ callback: @escaping RCTResponseSenderBlock) {
       if let lastSuggestion = lastSelectedSuggestion {

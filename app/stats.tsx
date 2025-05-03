@@ -12,6 +12,8 @@ import BlockedTime from '@/components/TimeHandling/BlockedTime'
 import { Activity } from '@/Types/ActivityTypes';
 import SleepLineChart from '@/components/Stats/SleepLineChart';
 import {decimalToTime, decimalToDurationTime} from '@/utils/DateTimeUtils'
+import layout_styles from '@/styles/reusable/layoutStyles';
+import font_styles from '@/styles/reusable/typography';
 
 // Define a type for the counts object
 interface ValueCounts {
@@ -147,9 +149,9 @@ function Stats() {
   }, [sleepSum])
   return (
     <ScrollView style={{backgroundColor: '#1B1B1B'}}>
-    <View style={styles.layoutContainer}>
-      <View style={styles.titleContainer}>
-        <ThemedText type="titleText" style={{fontSize: width/12}}>Statistics</ThemedText>
+    <View style={layout_styles.layoutContainer}>
+      <View style={layout_styles.titleContainer}>
+        <Text style={font_styles.headerStyle}>Statistics</Text>
       </View>
       <View style={styles.chartsContainer}>
       {enoughDataForToday && (   

@@ -57,7 +57,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="stats"
         options={{
           title: 'Stats',
@@ -65,7 +65,7 @@ export default function TabLayout() {
             <TabBarIcon name={focused ? 'stats-chart' : 'stats-chart-outline'} color={scheme.mutedDarkGray} /> // Updated icon for stats
           ),
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="settings/index"
         options={{

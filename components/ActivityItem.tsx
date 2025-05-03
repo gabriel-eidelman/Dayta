@@ -4,9 +4,9 @@ import { Feather, MaterialCommunityIcons, FontAwesome5, MaterialIcons } from '@e
 import unixTimeToString from '@/utils/unixTimeToString';
 import HandleSubmitEditing from '@/Data/HandleSubmitEditing';
 import {Activity, ActivityWithEnd} from '@/Types/ActivityTypes';
-import layout_styles from '@/styles/layoutStyles';
+import layout_styles from '@/styles/reusable/layoutStyles';
 import scheme from '@/utils/colorScheme';
-import font_styles from '@/styles/typography';
+import font_styles from '@/styles/reusable/typography';
 
 
 interface ActivityItemProps {
@@ -109,7 +109,7 @@ const ActivityItem = ({ activity, onRemove, timeState, dateIncrement, updateActi
               </TouchableOpacity>
   
               <View style={styles.touchableActivity}>
-                <Text style={styles.activityName}>{activity.button.text}</Text>
+                <Text style={font_styles.activityName}>{activity.button.text}</Text>
               </View>
                 {/* <View style={styles.indexCategories}>
                 {Cat.length>0 ? Cat.map((cat) => (
@@ -143,12 +143,6 @@ const ActivityItem = ({ activity, onRemove, timeState, dateIncrement, updateActi
         fontSize: 13,
         flexWrap: 'nowrap',
         color: scheme.mutedDarkGray || '#666666', // Fallback to ensure mutedDarkGray is applied
-      },
-      activityName: {
-        flex: 3,
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: scheme.strongDarkGray
       },
       category: { 
         fontSize: 15,

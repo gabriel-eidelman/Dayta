@@ -28,7 +28,12 @@ const font_styles = StyleSheet.create({
     fontFamily: 'Inter',
     color: scheme.strongDarkGray,
   },
-  
+  activityName: {
+    flex: 3,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: scheme.strongDarkGray
+  },
   h1: {
     fontSize: baseFontSizes.h1 * scale,
     fontFamily: 'Inter',
