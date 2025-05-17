@@ -1,7 +1,7 @@
     export interface ButtonState {
       text: string;
-      iconLibrary: string;
-      icon: string;
+      iconLibrary?: string;
+      icon?: string;
       keywords: string[];
       tags: string[];
       movementIntensity?: number;

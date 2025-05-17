@@ -108,7 +108,70 @@ function Personalize() {
         updateRoutine(tappedRout, updates)
       }
   };
-  
+
+    const customActTapped = (customAct: ButtonState) => {
+
+
+        if(customActInfo==customAct) {
+          setCustomActEditVisible(true);
+        }
+        else {
+          setCustomActInfo(customAct)
+
+        }
+      
+    }
+    
+    return (
+
+        <View style={layout_styles.layoutContainer}>
+
+          {/* Start Of Layout */}
+          <View style={layout_styles.contentContainer} >
+
+          <View style={layout_styles.titleContainer}>
+            <Text style={font_styles.headerStyle}>Personalization</Text>
+          </View>
+          <View style={layout_styles.bodyContainer}>
+            <View style={personalizeStyles.habitListContainer}>
+              <FlatList
+                ref={flatListRef}
+                data={alphabeticalActs}
+                keyExtractor={(item) => item.text}
+                style={personalizeStyles.flatList}
+                renderItem={({ item}) => ( 
+                  <TouchableOpacity onPress={() => customActTapped(item)}>
+                    <View style={personalizeStyles.resultContainer}>
+                        <Text style={font_styles.activityName}>{item.text}</Text>  
+                        {/* <AntDesign name="edit" size={width / 15} color="orange" />
+                        <TouchableOpacity onPress={() => deleteCustomActivity(item)} style={personalizeStyles.touchableDelete}>
+                        <MaterialIcons name="delete" size={width / 15} color="black" />
+                      </TouchableOpacity> */}
+                  </View>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+          <View style={layout_styles.plusButtonContainer}>
+            {/* <TouchableOpacity onPress={toggleModal}> */}
+              <AntDesign name="pluscircle" size={width/5} color={scheme.plusButton} />
+            {/* </TouchableOpacity> */}
+          </View>
+        </View>
+        </View>
+         {/* Modals */}
+         {customActInfo && (<CustomActivityEdit style={personalizeStyles.editModal} ActivityDescribeVisible={customActEditVisible} Info={customActInfo as ButtonState} onClose={() => setCustomActEditVisible(false)} onTapOut={() => setCustomActEditVisible(false)}/>)}
+          <CreateRoutineModal style={{}} MultitaskModalVisible={createRoutineModalVisible} onNext={handleSubmitRoutineModal} customRoutine={tappedRout} onTapOut={() => setCreateRoutineModalVisible(false)}/>
+        </View> 
+        
+    )
+}
+
+  export default Personalize;
+
+
+
+  /* DEPRECATED FUNCTIONS
     const handleSubmit = () => {
       console.log('running sumbit')
         if(inputText.length>2 && (tag1Value!=="null" || tag2Value!=="null")) {
@@ -173,63 +236,4 @@ function Personalize() {
     const customRoutTapped = (customRout: Routine) => {
       setTappedRout(customRout)
       }
-
-    const customActTapped = (customAct: ButtonState) => {
-
-
-        if(customActInfo==customAct) {
-          setCustomActEditVisible(true);
-        }
-        else {
-          setCustomActInfo(customAct)
-
-        }
-      
-    }
-    
-    return (
-
-        <View style={layout_styles.layoutContainer}>
-
-          {/* Start Of Layout */}
-          <View style={layout_styles.contentContainer} >
-
-          <View style={layout_styles.titleContainer}>
-            <Text style={font_styles.headerStyle}>Personalization</Text>
-          </View>
-          <View style={layout_styles.bodyContainer}>
-            <View style={personalizeStyles.habitListContainer}>
-              <FlatList
-                ref={flatListRef}
-                data={alphabeticalActs}
-                keyExtractor={(item) => item.text}
-                style={personalizeStyles.flatList}
-                renderItem={({ item}) => ( 
-                  <TouchableOpacity onPress={() => customActTapped(item)}>
-                    <View style={personalizeStyles.resultContainer}>
-                        <Text style={font_styles.activityName}>{item.text}</Text>  
-                        {/* <AntDesign name="edit" size={width / 15} color="orange" />
-                        <TouchableOpacity onPress={() => deleteCustomActivity(item)} style={personalizeStyles.touchableDelete}>
-                        <MaterialIcons name="delete" size={width / 15} color="black" />
-                      </TouchableOpacity> */}
-                  </View>
-                  </TouchableOpacity>
-                )}
-              />
-            </View>
-          <View style={layout_styles.plusButtonContainer}>
-            {/* <TouchableOpacity onPress={toggleModal}> */}
-              <AntDesign name="pluscircle" size={width/5} color={scheme.plusButton} />
-            {/* </TouchableOpacity> */}
-          </View>
-        </View>
-        </View>
-         {/* Modals */}
-         {customActInfo && (<CustomActivityEdit style={personalizeStyles.editModal} ActivityDescribeVisible={customActEditVisible} Info={customActInfo as ButtonState} onClose={() => setCustomActEditVisible(false)} onTapOut={() => setCustomActEditVisible(false)}/>)}
-          <CreateRoutineModal style={{}} MultitaskModalVisible={createRoutineModalVisible} onNext={handleSubmitRoutineModal} customRoutine={tappedRout} onTapOut={() => setCreateRoutineModalVisible(false)}/>
-        </View> 
-        
-    )
-}
-
-  export default Personalize;
+  */

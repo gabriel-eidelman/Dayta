@@ -37,14 +37,14 @@ class JournalSuggestionsModule: NSObject, RCTBridgeModule {
             // Create the view with a callback to send data back to React Native
             let pickerView = JournalPickerView(onSuggestionSelected: { suggestion in
                 // Convert suggestion to dictionary
-                let suggestionDict: [String: Any] = [
-                    "text": suggestion.title,
-                ]
+//                let suggestionDict: [String: Any] = [
+//                    "text": suggestion["text"],
+//                ]
                 
-                self.lastSelectedSuggestion = suggestionDict
+                self.lastSelectedSuggestion = suggestion
 
                 // Send data back to React Native
-                callback([NSNull(), suggestionDict])
+                callback([NSNull(), suggestion])
             })
             
             // Wrap in UIHostingController

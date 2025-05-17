@@ -20,8 +20,9 @@ import scheme from '@/utils/colorScheme';
 import layout_styles from '@/styles/reusable/layoutStyles';
 import font_styles from '@/styles/reusable/typography';
 import ActivityItem from '@/components/ActivityItem';
-
+import addActivityFromSuggestion from '@/Data/AddActivityFromSuggestion';
 import { getSunriseSunset, generateISODate } from '@/utils/DateTimeUtils';
+import Toast from 'react-native-toast-message';
 
 // Get screen width. This is for more responsive layouts
 const { width, height } = Dimensions.get('window');
@@ -41,6 +42,7 @@ function Journal() {
   const [suggestion, setSuggestion] = useState<JournalSuggestion | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+
   const storedToken = storage.getString('AuthToken')
 
   // if(!storedToken) {
@@ -58,6 +60,20 @@ function Journal() {
     try {
       const selected = await showSuggestionsPicker();
       setSuggestion(selected);
+      console.log('Selected suggestion:', selected);
+      console.log('Selected suggestion:', selected.text);
+      console.log('Selected suggestion:', selected.timeblock);
+      if(selected.timeblock) {
+        addActivityFromSuggestion(selected, addActivity);
+      }
+      else {
+        Toast.show({
+          type: 'error',
+          text1: 'No Time Block',
+          text2: 'Activity was not added because no time block was provided.',
+        });
+      }
+
       console.log("suggestions set");
     } catch (error) {
       console.error('Error showing picker:', error);
@@ -74,6 +90,7 @@ function Journal() {
   //   }
   // };
 
+  // Decompose later
   const sunriseActivity: ActivityWithEnd = {
     id: uuid.v4() as string,
     parentRoutName: 'sun',  // Optional field to identify special types
@@ -138,7 +155,7 @@ function Journal() {
       setActivityDescribeVisible(true);
     }
     }, [activityInfo])
-  const { justActivities, removeActivity, updateActivity, moveActivity, dateIncrement, setDateIncrement } = useAppContext();
+  const { addActivity, justActivities, removeActivity, updateActivity, moveActivity, dateIncrement, setDateIncrement } = useAppContext();
 
   const [isTimeTapped, setTimedTapped] = useState<(boolean | string)[]>([false, ""]);
   const [localTime, setLocalTime] = useState<DateTime>(DateTime.local().plus({ days: dateIncrement }))
@@ -227,11 +244,11 @@ function Journal() {
           </View>
           <View style={layout_styles.bodyContainer}>
             <View style={layout_styles.headerContainer}>
-              {/* <TouchableOpacity onPress={() => setDateIncrement(dateIncrement-1)}>
+              <TouchableOpacity onPress={() => setDateIncrement(dateIncrement-1)}>
                       <View style={styles.incrementButtonContainer}>
                         <Ionicons name="return-up-back" size={height/27} color="#F5F5F5"/>
                       </View>
-              </TouchableOpacity>    */}
+              </TouchableOpacity>   
               <Text style={styles.dateText}>{localTime.toFormat('cccc LLLL d')}</Text>
               {/* <TouchableOpacity onPress={() => setDateIncrement(dateIncrement+1)}>
                     <View style={styles.incrementButtonContainer}>
@@ -252,7 +269,7 @@ function Journal() {
                 </View>
           </ScrollView> */}
           
-            {suggestion!=null && (
+            {/* {suggestion!=null && (
               <View style={styles.suggestionContainer}>
                 <Text style={styles.suggestionText}>
                   Selected: {suggestion.text}
@@ -261,7 +278,7 @@ function Journal() {
                   <Text>Category: {suggestion.category}</Text>
                 )}
               </View>
-            )}
+            )} */}
             {withSunriseSunset.length>0 ? 
             <KeyboardAvoidingView 
             behavior= {'padding'}

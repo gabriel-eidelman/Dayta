@@ -5,9 +5,14 @@ const { JournalSuggestionsModule } = NativeModules;
 // Updated type definition with only the properties we're using
 type JournalSuggestion = {
   text: string;
-  date?: number; // Optional now since it might not come from the picker
-  category?: string; // Optional since it might not come from the picker
-  location?: string; // Optional since it might not come from the picker
+  date?: number;
+  category?: string;
+  location?: string;
+  timeblock?: {
+    startTime: number;    // Unix timestamp (ms)
+    endTime: number;      // Unix timestamp (ms)
+    duration: number; // milliseconds
+  } | null;
 };
 
 // The existing function to fetch dummy suggestions
