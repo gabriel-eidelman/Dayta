@@ -5,10 +5,11 @@ import CustomButton from '../Custom/CustomButton';
 import TimeInput from '../TimeHandling/TimeInput'
 import RNPickerSelect from 'react-native-picker-select'
 import TimeDropdown from '../TimeHandling/TimeDropdown'
-import { convertTimeToUnix, adjustDateByDays, decimalToDurationTime } from '@/utils/DateTimeUtils';
+import { convertTimeToUnix, adjustDateByDays, decimalToDurationTime, generateTimeString } from '@/utils/DateTimeUtils';
 import { Routine,  Activity } from '@/Types/ActivityTypes';
 import CreateRoutineModal from './CreateRoutineModal';
 import uuid from 'react-native-uuid'
+import { TimeSelection } from '@/Types/TimeType';
 
 const {width, height} = Dimensions.get("window");
 const buttonWidth = width*0.6
@@ -29,9 +30,8 @@ const buttonWidth = width*0.6
 const AddRoutineModal: React.FC<MultitaskModalProps> = ({ MultitaskModalVisible, onNext, onTapOut, ...modalProps }) => {
 
   const [tagValue, setTagValue] = useState<string>("")
-  const [selectedHour, setSelectedHour] = useState("10");
-  const [selectedMinute, setSelectedMinute] = useState("30");
-  const [selectedPeriod, setSelectedPeriod] = useState("AM");
+  const [time, setTime] = useState<TimeSelection>({ hour: '10', minute: '00', period: 'AM' });
+
   const {dateIncrement, customRoutines} = useAppContext();
   const [part2Visible, setPart2Visible] = useState<boolean>(false);
   const [relevantRoutine, setRelevantRoutine] = useState<Routine>()
@@ -58,15 +58,15 @@ const {customActivities} = useAppContext();
   };
 
   const handleHourChange = (hour: string) => {
-    setSelectedHour(hour);
+    setTime({ ...time, hour });
   };
 
   const handleMinuteChange = (minute: string) => {
-    setSelectedMinute(minute);
+    setTime({ ...time, minute });
   };
 
   const handlePeriodChange = (period: string) => {
-    setSelectedPeriod(period);
+    setTime({ ...time, period });
   };
   const createStartTime = (startTimeUnix: number) => {
     const localDate = new Date(startTimeUnix * 1000); 
@@ -75,17 +75,7 @@ const {customActivities} = useAppContext();
     const unixTimestamp = Math.floor(utcZonedTime.getTime() / 1000);
     return unixTimestamp
   }
-  const generateTimeString = () => {
 
-    if(selectedHour) {
-        const timeString = selectedHour + ":" + selectedMinute + " " + selectedPeriod
-        return timeString
-    }
-    else {
-        alert("Please Select A Time")
-        return ""
-      }
-    }
     const handleNext = (start: number) => {
       if(tagValue!=="") {
         const atHand = customRoutines.find(rout => rout.name==tagValue)
@@ -137,7 +127,7 @@ const {customActivities} = useAppContext();
     
         // Pass the updated routine and calculated start time to the onNext function
         setPart2Visible(false);
-        onNext(newRoutine, createStartTime(convertTimeToUnix(generateTimeString())));
+        onNext(newRoutine, createStartTime(convertTimeToUnix(generateTimeString(time))));
       } else {
         alert("Please enter a routine");
       }
@@ -168,16 +158,12 @@ const {customActivities} = useAppContext();
                 <View style={[styles.stepContainer, {paddingTop: 20}]}>
         
                 <TimeDropdown
-                      selectedHour={selectedHour}
-                      selectedMinute={selectedMinute}
-                      selectedPeriod={selectedPeriod}
-                      onHourChange={handleHourChange}
-                      onMinuteChange={handleMinuteChange}
-                      onPeriodChange={handlePeriodChange}
-                      />
+                    selectedTime={time}
+                    onChange={setTime}
+                  />
                 </View>
                 <View style={styles.nextContainer}>
-                  <CustomButton title="Next" width={width*0.6} onPress={() => handleNext(createStartTime(convertTimeToUnix(generateTimeString())))} />
+                  <CustomButton title="Next" width={width*0.6} onPress={() => handleNext(createStartTime(convertTimeToUnix(generateTimeString(time))))} />
                 </View>
             </View>
             

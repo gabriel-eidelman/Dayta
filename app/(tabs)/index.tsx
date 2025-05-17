@@ -2,7 +2,7 @@ import { StyleSheet, View, Dimensions, FlatList, Text, TouchableOpacity, ScrollV
 import { ThemedText } from '@/components/ThemedText';
 import { useState, useEffect, useRef } from 'react';
 import {AntDesign, MaterialIcons, Ionicons, Feather, MaterialCommunityIcons, FontAwesome5} from '@expo/vector-icons';
-import MyModal from '@/components/Modals/MyModal'
+import JournalCustomHabit from '@/components/Modals/JournalCustomHabit'
 import AddHabitModal from '@/components/Modals/AddHabit'
 import { useAppContext } from '@/contexts/AppContext';
 import {useAuth} from '@/contexts/AuthContext'
@@ -11,11 +11,11 @@ import ActivityDescribeModal from '@/components/Modals/ActivityDescribeModal'
 import {DateTime} from 'luxon'
 import {Activity, ActivityWithEnd} from '@/Types/ActivityTypes';
 import uuid from 'react-native-uuid'
-import NoStartTimeModal from '@/components/Modals/NoStartTimeModal';
-import CalendarConnect from '@/components/CalendarConnect';
-import CalendarInformation from '@/components/CalendarInformation'
+import NoStartTimeModal from '@/components/Deprecated/NoStartTimeModal';
+// import CalendarConnect from '@/components/CalendarConnect';
+// import CalendarInformation from '@/components/CalendarInformation'
 import {storage} from '@/utils/mmkvStorage';
-import { fetchSuggestion, JournalSuggestion, showSuggestionsPicker } from "@/components/JournalingSuggestions";
+import { JournalSuggestion, showSuggestionsPicker } from "@/components/JournalingSuggestions";
 import scheme from '@/utils/colorScheme';
 import layout_styles from '@/styles/reusable/layoutStyles';
 import font_styles from '@/styles/reusable/typography';
@@ -64,15 +64,15 @@ function Journal() {
     }
   };
 
-  const loadSuggestions = async () => {
-    try {
-      setError(null);
-      const data = await fetchSuggestion();
-      setSuggestion(data);
-    } catch (err: any) {
-      setError(err.message);
-    }
-  };
+  // const loadSuggestions = async () => {
+  //   try {
+  //     setError(null);
+  //     const data = await fetchSuggestion();
+  //     setSuggestion(data);
+  //   } catch (err: any) {
+  //     setError(err.message);
+  //   }
+  // };
 
   const sunriseActivity: ActivityWithEnd = {
     id: uuid.v4() as string,
@@ -149,7 +149,7 @@ function Journal() {
   }
   useEffect(() => {
     generateSunriseSunset();
-    loadSuggestions();
+    // loadSuggestions();
 }, [dateIncrement])
   const [activityDescribeVisible, setActivityDescribeVisible] = useState<boolean>(false);
   useEffect(() => {
@@ -203,85 +203,95 @@ function Journal() {
         await handleShowPicker(); // Call native UI after modal is gone
       }, 300); // Wait for animation to finish
     }
-    const toggleNoStartModal = () => {
-      setNoStartModalVisible(true);
+    const handleCustomHabitPress = () => {
+      setAddHabitModalVisible(false);
+      setTimeout(() => {
+        toggleModal();
+      }, 300);
     }
+    // const toggleNoStartModal = () => {
+    //   setNoStartModalVisible(true);
+    // }
   return (
     //addHabitModalVisible ? {opacity: 0.4} : {opacity: 1}
       <View style={[layout_styles.layoutContainer]}>
         {/* Global Modals */}
-        <AddHabitModal isOpen={addHabitModalVisible} onApplePickerPress={handleAppleTrigger} onCustomHabitPress={() => {setModalVisible(true)}} onClose={toggleAddHabitModal} />
-        {activityInfo && (<ActivityDescribeModal style={styles.durationModal} ActivityDescribeVisible={activityDescribeVisible} Info={activityInfo as Activity} onClose={() => setActivityDescribeVisible(false)} onTapOut={() => setActivityDescribeVisible(false)}/>)}
+        <AddHabitModal isOpen={addHabitModalVisible} onApplePickerPress={handleAppleTrigger} onCustomHabitPress={handleCustomHabitPress} onClose={toggleAddHabitModal} />
+        {activityInfo && (<ActivityDescribeModal style={{flex: 1}} ActivityDescribeVisible={activityDescribeVisible} Info={activityInfo as Activity} onClose={() => setActivityDescribeVisible(false)} onTapOut={() => setActivityDescribeVisible(false)}/>)}
         <NoStartTimeModal visible={noStartModalVisible} onClose={() => setNoStartModalVisible(false)} remove={remove} otherArray={noEnd}/>
-        <MyModal visible={modalVisible} onClose={toggleModal} />
+        <JournalCustomHabit visible={modalVisible} onClose={toggleModal} />
         {/* Layout Start */}
         <View style={layout_styles.contentContainer} >
           <View style={layout_styles.titleContainer}>
             <Text style={font_styles.headerStyle}>Journal</Text>
           </View>
-          <View style={layout_styles.headerContainer}>
-            {/* <TouchableOpacity onPress={() => setDateIncrement(dateIncrement-1)}>
+          <View style={layout_styles.bodyContainer}>
+            <View style={layout_styles.headerContainer}>
+              {/* <TouchableOpacity onPress={() => setDateIncrement(dateIncrement-1)}>
+                      <View style={styles.incrementButtonContainer}>
+                        <Ionicons name="return-up-back" size={height/27} color="#F5F5F5"/>
+                      </View>
+              </TouchableOpacity>    */}
+              <Text style={styles.dateText}>{localTime.toFormat('cccc LLLL d')}</Text>
+              {/* <TouchableOpacity onPress={() => setDateIncrement(dateIncrement+1)}>
                     <View style={styles.incrementButtonContainer}>
-                      <Ionicons name="return-up-back" size={height/27} color="#F5F5F5"/>
+                      <Ionicons name="return-up-forward" size={height/27} color="#F5F5F5"/>
                     </View>
-            </TouchableOpacity>    */}
-            <Text style={styles.dateText}>{localTime.toFormat('cccc LLLL d')}</Text>
-            {/* <TouchableOpacity onPress={() => setDateIncrement(dateIncrement+1)}>
-                  <View style={styles.incrementButtonContainer}>
-                    <Ionicons name="return-up-forward" size={height/27} color="#F5F5F5"/>
-                  </View>
-            </TouchableOpacity> */}
-          </View>
-          {/* {showAuth ? <CalendarConnect authToken={authToken} setAuthToken={setAuthToken} /> : <></>} */}
-          {/* <CalendarInformation authToken={authToken}/> */}
-          {/* <ScrollView style={{ padding: 20 }}>
-            <Button title="Refresh Suggestions" onPress={loadSuggestions} />
-            {error && <Text style={{ color: "red" }}>Error: {error}</Text>}
+              </TouchableOpacity> */}
+            </View>
+            {/* {showAuth ? <CalendarConnect authToken={authToken} setAuthToken={setAuthToken} /> : <></>} */}
+            {/* <CalendarInformation authToken={authToken}/> */}
+            {/* <Button title="Refresh Suggestions" onPress={loadSuggestions} /> */}
 
-              <View style={{ marginVertical: 10 }}>
-                <Text style={{color: 'white'}}>📌 {suggestion!=null ? suggestion.text : "No Suggestion"}</Text>
+            {/* <ScrollView style={{ padding: 20 }}>
+              <Button title="Refresh Suggestions" onPress={loadSuggestions} />
+              {error && <Text style={{ color: "red" }}>Error: {error}</Text>}
+
+                <View style={{ marginVertical: 10 }}>
+                  <Text style={{color: 'white'}}>📌 {suggestion!=null ? suggestion.text : "No Suggestion"}</Text>
+                </View>
+          </ScrollView> */}
+          
+            {suggestion!=null && (
+              <View style={styles.suggestionContainer}>
+                <Text style={styles.suggestionText}>
+                  Selected: {suggestion.text}
+                </Text> 
+                {suggestion.category && (
+                  <Text>Category: {suggestion.category}</Text>
+                )}
               </View>
-        </ScrollView> */}
-        
-          {/* {suggestion!=null && (
-            <View style={styles.suggestionContainer}>
-              <Text style={styles.suggestionText}>
-                Selected: {suggestion.text}
-              </Text> */}
-              {/* {suggestions.category && (
-                <Text>Category: {suggestions.category}</Text>
-              )} */}
-            {/* </View>
-          )} */}
-          {withSunriseSunset.length>0 ? 
-          <KeyboardAvoidingView 
-          behavior= {'padding'}
-          keyboardVerticalOffset={80} 
-          style={{marginBottom: 80}}>
+            )}
+            {withSunriseSunset.length>0 ? 
+            <KeyboardAvoidingView 
+            behavior= {'padding'}
+            keyboardVerticalOffset={80} 
+            style={{marginBottom: 80}}>
 
-          <FlatList 
-          ref={flatListRef}
-          data={withSunriseSunset}
-          renderItem={({ item }) => <ActivityItem activity={item} onRemove={remove} timeState={isTimeTapped} dateIncrement={dateIncrement} updateActivity={updateActivity} moveActivity={moveActivity} onTimeTap={timeTapped} onTap={activityTapped}/>}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContent}
-          />
-          </KeyboardAvoidingView>
-            : <>
-              {/* <ThemedText type="subtitle">
-                Add Your First Activity For The Day!
-              </ThemedText> */}
-            </>}
-        </View>
-        {/* <View style={styles.calendarButtonContainer}>
-          <TouchableOpacity onPress={toggleNoStartModal}>
-            <AntDesign name="calendar" size={width/8} color="grey" />
-          </TouchableOpacity>
-        </View> */}
-        <View style={layout_styles.plusButtonContainer}>
-          <TouchableOpacity onPress={toggleAddHabitModal}>
-            <AntDesign name="pluscircle" size={width/5} color={scheme.plusButton} />
-          </TouchableOpacity>
+            <FlatList 
+            ref={flatListRef}
+            data={withSunriseSunset}
+            renderItem={({ item }) => <ActivityItem activity={item} onRemove={remove} timeState={isTimeTapped} dateIncrement={dateIncrement} updateActivity={updateActivity} moveActivity={moveActivity} onTimeTap={timeTapped} onTap={activityTapped}/>}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.listContent}
+            />
+            </KeyboardAvoidingView>
+              : <>
+                {/* <ThemedText type="subtitle">
+                  Add Your First Activity For The Day!
+                </ThemedText> */}
+              </>}
+            {/* <View style={styles.calendarButtonContainer}>
+              <TouchableOpacity onPress={toggleNoStartModal}>
+                <AntDesign name="calendar" size={width/8} color="grey" />
+              </TouchableOpacity>
+            </View> */}
+            <View style={layout_styles.plusButtonContainer}>
+              <TouchableOpacity onPress={toggleAddHabitModal}>
+                <AntDesign name="pluscircle" size={width/5} color={scheme.plusButton} />
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
         {/* <View style={styles.otherButtonContainer}>
           <TouchableOpacity onPress={toggleNoStartModal}>
@@ -339,10 +349,6 @@ detailsContainer: {
 },
 indexCategories: {
   marginLeft: 'auto'
-},
-
-durationModal: {
-  flex: 1
 },
 calendarButtonContainer: {
   position: 'absolute', // Absolute positioning to overlay everything

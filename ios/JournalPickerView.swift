@@ -30,12 +30,21 @@ struct JournalPickerView: View {
         }
       }
       
-      Text(suggestionTitle ?? "")
+//      Text(suggestionTitle ?? "")
       
 //      Button(action: close) {
 //        Text("Add")
 //      }
     }
   }
+  
+//  func journalingBridgePage() -> some View {
+//
+//  }
 }
+
+//#Preview {
+//  JournalPickerView(onSuggestionSelected: {})
+//}
+
 

@@ -48,3 +48,36 @@ interface TagDropdownProps {
     </View>
     );
   };
+
+  /*
+interface TagDropdownProps {
+  tagValue: string;
+  setTagValue: React.Dispatch<React.SetStateAction<string>>;
+}
+const TagDropdown: React.FC<TagDropdownProps> = ({ tagValue, setTagValue }) => {
+  const tags = [
+    { label: 'Food/Drink', value: 'Food/Drink'},
+    { label: 'Physical', value: 'Physical' },
+    { label: 'Relax', value: 'Relax' },
+    { label: 'Music', value: 'Music' },
+    { label: 'Entertainment', value: 'Entertainment' },
+    { label: 'Social', value: 'Social' },
+    { label: 'Work/Study', value: 'Work/Study' },
+    { label: 'Travel/Commute', value: 'Travel/Commute' },
+    { label: 'Hobbies', value: 'Hobbies' },
+    { label: 'Chores', value: 'Chores' },
+    { label: 'Self-Improvement', value: 'Self-Improvement' },
+    {label: 'Family Time', value: 'Family Time'},
+    { label: 'Helping Others', value: 'Helping Others' },
+    {label: 'Intaking Knowledge', value: 'Intaking Knowledge'},
+    { label: 'Other', value: 'Other' },
+  ]
+  return (
+    <RNPickerSelect
+      value={tagValue}
+      onValueChange={(value) => setTagValue(value)}
+      items={tags}
+    />
+  );
+};
+  */

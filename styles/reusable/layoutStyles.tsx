@@ -5,29 +5,42 @@ import { Dimensions } from "react-native";
 const { height } = Dimensions.get("window");
 
 const layout_styles = StyleSheet.create({
-    //colors darkcyan, mintcream, bisque
+    // Layout style
     layoutContainer: {
      flex: 1,
-     paddingTop: '10%',
+     paddingTop: 10,
      backgroundColor: scheme.background,
      position: 'relative', // Container must be relative for absolute positioning of child
    },
    contentContainer: {
      flex: 1,
-     paddingBottom: '10%', // Space at the bottom to accommodate the button
+     paddingBottom: 30, // Space at the bottom to accommodate the button
    },
    headerContainer: {
-     marginHorizontal: '8%',
-     flexDirection: 'row',
+    flexDirection: 'row', 
+     marginHorizontal: 24,
+    //  flexDirection: 'row',
+    //  justifyContent: 'space-between',
      justifyContent: 'center',
+   },
+   closeHeaderContainer: {
+     paddingTop: 80,
+     flexDirection: 'row',
+     justifyContent: 'space-between',
      alignItems: 'center',
+     paddingBottom: 30,
    },
    titleContainer: {
+        flex: 1,
         alignItems: 'center',
-        paddingTop: '10%',
+        paddingTop: 80,
+   },
+   bodyContainer: {
+      flex: 15,
    },
    dateContainer: {
      alignItems: 'center',
+     justifyContent: 'center',
    },
    plusButtonContainer: {
     position: 'absolute', // Absolute positioning to overlay everything
@@ -87,4 +100,4 @@ const layout_styles = StyleSheet.create({
 
    });
 
-   export default layout_styles;
+export default layout_styles;

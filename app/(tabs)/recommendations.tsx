@@ -182,71 +182,74 @@ export default function Recommendations() {
       <View style={layout_styles.titleContainer}>
         <Text style={font_styles.headerStyle}>Recommendations</Text>
       </View>
-      <SafeAreaView style={{flex: 1}}>
-        <Swiper
-          ref={swiperRef}
-          cards={cards}
-          cardIndex={cardIndex}
-          renderCard={renderCard}
-          onSwipedRight={onSwipedRight}
-          onSwipedLeft={onSwipedLeft}
-          stackSize={1}
-          disableTopSwipe
-          disableBottomSwipe
-          disableRightSwipe={cardIndex <= 0} // Disable right swipe at the last card
-          disableLeftSwipe={cardIndex >= cards.length - 1} // Disable left swipe at the first card
-          animateCardOpacity
-          backgroundColor="transparent"
-          cardHorizontalMargin={0}
-          cardVerticalMargin={0}
-          useViewOverflow={Platform.OS === 'ios'}
-          infinite={false}
-          showSecondCard={false}
-          key={cardIndex}  // Force re-render on card index change
-          stackSeparation={15}
-          overlayLabels={{
-            left: {
-              title: 'Next',
-              style: {
-                label: {
-                  backgroundColor: 'green',
-                  borderColor: 'green',
-                  color: 'white',
-                  borderWidth: 1,
-                },
-                wrapper: {
-                  flexDirection: 'column',
-                  alignItems: 'flex-end',
-                  justifyContent: 'flex-start',
-                  marginTop: 20,
-                  marginLeft: -20,
-                },
-              },
-            },
-            right: {
-              title: 'Prev',
-              style: {
-                label: {
-                  backgroundColor: 'green',
-                  borderColor: 'green',
-                  color: 'white',
-                  borderWidth: 1,
-                },
-                wrapper: {
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  justifyContent: 'flex-start',
-                  marginTop: 20,
-                  marginLeft: 20,
+      <View style={layout_styles.bodyContainer}>
+
+        <SafeAreaView style={{flex: 1}}>
+          <Swiper
+            ref={swiperRef}
+            cards={cards}
+            cardIndex={cardIndex}
+            renderCard={renderCard}
+            onSwipedRight={onSwipedRight}
+            onSwipedLeft={onSwipedLeft}
+            stackSize={1}
+            disableTopSwipe
+            disableBottomSwipe
+            disableRightSwipe={cardIndex <= 0} // Disable right swipe at the last card
+            disableLeftSwipe={cardIndex >= cards.length - 1} // Disable left swipe at the first card
+            animateCardOpacity
+            backgroundColor="transparent"
+            cardHorizontalMargin={0}
+            cardVerticalMargin={0}
+            useViewOverflow={Platform.OS === 'ios'}
+            infinite={false}
+            showSecondCard={false}
+            key={cardIndex}  // Force re-render on card index change
+            stackSeparation={15}
+            overlayLabels={{
+              left: {
+                title: 'Next',
+                style: {
+                  label: {
+                    backgroundColor: 'green',
+                    borderColor: 'green',
+                    color: 'white',
+                    borderWidth: 1,
+                  },
+                  wrapper: {
+                    flexDirection: 'column',
+                    alignItems: 'flex-end',
+                    justifyContent: 'flex-start',
+                    marginTop: 20,
+                    marginLeft: -20,
+                  },
                 },
               },
-            },
-          }}
-        />
-      </SafeAreaView>
-      <Animated.View style={[styles.arrowContainer, { transform: [{ translateX: arrowTranslateX }] }]}>
-      <Text style={styles.arrowText}>→</Text>
-    </Animated.View>
+              right: {
+                title: 'Prev',
+                style: {
+                  label: {
+                    backgroundColor: 'green',
+                    borderColor: 'green',
+                    color: 'white',
+                    borderWidth: 1,
+                  },
+                  wrapper: {
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    justifyContent: 'flex-start',
+                    marginTop: 20,
+                    marginLeft: 20,
+                  },
+                },
+              },
+            }}
+          />
+        </SafeAreaView>
+        <Animated.View style={[styles.arrowContainer, { transform: [{ translateX: arrowTranslateX }] }]}>
+        <Text style={styles.arrowText}>→</Text>
+      </Animated.View>
+      </View>
     </View>
   );
 }

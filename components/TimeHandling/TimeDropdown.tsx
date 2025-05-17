@@ -2,23 +2,29 @@ import React, { useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import {StyleSheet, View, Text} from 'react-native'
 import {ThemedText} from '../ThemedText'
+import {TimeSelection} from '@/Types/TimeType'
 
 interface TimeDropdownProps {
-    selectedHour: string;
-    selectedMinute: string;
-    selectedPeriod: string; // AM or PM
-    onHourChange: (hour: string) => void;
-    onMinuteChange: (minute: string) => void;
-    onPeriodChange: (period: string) => void;
+    selectedTime: TimeSelection;
+    onChange: (time: TimeSelection) => void;
+    // selectedHour: string;
+    // selectedMinute: string;
+    // selectedPeriod: string; // AM or PM
+    // onHourChange: (hour: string) => void;
+    // onMinuteChange: (minute: string) => void;
+    // onPeriodChange: (period: string) => void;
 }
 
 const TimeDropdown: React.FC<TimeDropdownProps> = ({   
-    selectedHour,
-    selectedMinute,
-    selectedPeriod,
-    onHourChange,
-    onMinuteChange,
-    onPeriodChange }) => {
+  selectedTime,
+  onChange,
+    // selectedHour,
+    // selectedMinute,
+    // selectedPeriod,
+    // onHourChange,
+    // onMinuteChange,
+    // onPeriodChange 
+  }) => {
         const generateHourOptions = () => {
           const hours = [];
           for (let h = 1; h <= 12; h++) {
@@ -42,8 +48,8 @@ const TimeDropdown: React.FC<TimeDropdownProps> = ({
       <View style={styles.pickerContainer}>
         <Text style={styles.label}>Hour:</Text>
         <Picker
-          selectedValue={selectedHour}
-          onValueChange={(itemValue) => onHourChange(itemValue as string)}
+          selectedValue={selectedTime.hour}
+          onValueChange={(itemValue) => onChange({hour: itemValue as string, minute: selectedTime.minute, period: selectedTime.period})}
           style={styles.picker}
         >
           {generateHourOptions().map((hour) => (
@@ -54,8 +60,8 @@ const TimeDropdown: React.FC<TimeDropdownProps> = ({
       <View style={styles.pickerContainer}>
         <Text style={styles.label}>Minute:</Text>
         <Picker
-          selectedValue={selectedMinute}
-          onValueChange={(itemValue) => onMinuteChange(itemValue as string)}
+          selectedValue={selectedTime.minute}
+          onValueChange={(itemValue) => onChange({hour: selectedTime.hour, minute: itemValue as string, period: selectedTime.period})}
           style={styles.picker}
         >
           {generateMinuteOptions().map((minute) => (
@@ -66,8 +72,8 @@ const TimeDropdown: React.FC<TimeDropdownProps> = ({
       <View style={styles.pickerContainer}>
         <Text style={styles.label}>Period:</Text>
         <Picker
-          selectedValue={selectedPeriod}
-          onValueChange={(itemValue) => onPeriodChange(itemValue as string)}
+          selectedValue={selectedTime.period}
+          onValueChange={(itemValue) => onChange({hour: selectedTime.hour, minute: selectedTime.minute, period: itemValue as string})}
           style={styles.picker}
         >
           {generatePeriodOptions().map((period) => (
@@ -81,22 +87,23 @@ const TimeDropdown: React.FC<TimeDropdownProps> = ({
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      },
-      pickerContainer: {
-        flex: 1, // Allows the container to expand and fit available space
-      },
-      picker: {
-        height: '90%',
-        width: '100%', // Make sure the picker takes up the full width of its container
-      },
-      label: {
-        fontSize: 16,
-        marginBottom: 5,
-      },
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      gap: 10,
+    },
+    pickerContainer: {
+      flex: 1,
+      alignItems: 'center',
+    },
+    picker: {
+      height: 120, // Fixed height is crucial
+      width: '100%',
+    },
+    label: {
+      fontSize: 16,
+      marginBottom: 5,
+    },
   });
 
   export default TimeDropdown;

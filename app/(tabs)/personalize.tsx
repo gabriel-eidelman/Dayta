@@ -1,15 +1,12 @@
 import {useAppContext, AppProvider} from '@/contexts/AppContext'
 import {ButtonState} from '@/Types/ActivityTypes'
 import {useAuth} from '@/contexts/AuthContext'
-import {Dispatch, SetStateAction, useState, useRef, useEffect} from 'react'
-import {View, Text, TouchableOpacity, StyleSheet, Dimensions, TextInput, TouchableWithoutFeedback, Keyboard, FlatList, Button} from 'react-native'
-import { ThemedText } from '@/components/ThemedText'
-import RNPickerSelect from 'react-native-picker-select'
+import {useState, useRef, useEffect} from 'react'
+import {View, Text, TouchableOpacity, Dimensions, FlatList, Button} from 'react-native'
 import { Routine, Activity } from '@/Types/ActivityTypes'
 import CreateRoutineModal from '@/components/Modals/CreateRoutineModal'
 import uuid from 'react-native-uuid'
-import CustomButton from '@/components/Custom/CustomButton'
-import { MaterialIcons, AntDesign } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 import CustomActivityEdit from '@/components/Modals/CustomActivityEdit'
 import layout_styles from '@/styles/reusable/layoutStyles';
 import font_styles from '@/styles/reusable/typography';
@@ -191,8 +188,7 @@ function Personalize() {
     }
     
     return (
-      <>
-      {/* <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}> */}
+
         <View style={layout_styles.layoutContainer}>
 
           {/* Start Of Layout */}
@@ -201,36 +197,38 @@ function Personalize() {
           <View style={layout_styles.titleContainer}>
             <Text style={font_styles.headerStyle}>Personalization</Text>
           </View>
-          <View style={personalizeStyles.habitListContainer}>
-            <FlatList
-              ref={flatListRef}
-              data={alphabeticalActs}
-              keyExtractor={(item) => item.text}
-              style={personalizeStyles.flatList}
-              renderItem={({ item}) => ( 
-                <TouchableOpacity onPress={() => customActTapped(item)}>
-                  <View style={personalizeStyles.resultContainer}>
-                      <Text style={font_styles.activityName}>{item.text}</Text>  
-                      {/* <AntDesign name="edit" size={width / 15} color="orange" />
-                      <TouchableOpacity onPress={() => deleteCustomActivity(item)} style={personalizeStyles.touchableDelete}>
-                      <MaterialIcons name="delete" size={width / 15} color="black" />
-                    </TouchableOpacity> */}
-                </View>
-                </TouchableOpacity>
-              )}
-            />
+          <View style={layout_styles.bodyContainer}>
+            <View style={personalizeStyles.habitListContainer}>
+              <FlatList
+                ref={flatListRef}
+                data={alphabeticalActs}
+                keyExtractor={(item) => item.text}
+                style={personalizeStyles.flatList}
+                renderItem={({ item}) => ( 
+                  <TouchableOpacity onPress={() => customActTapped(item)}>
+                    <View style={personalizeStyles.resultContainer}>
+                        <Text style={font_styles.activityName}>{item.text}</Text>  
+                        {/* <AntDesign name="edit" size={width / 15} color="orange" />
+                        <TouchableOpacity onPress={() => deleteCustomActivity(item)} style={personalizeStyles.touchableDelete}>
+                        <MaterialIcons name="delete" size={width / 15} color="black" />
+                      </TouchableOpacity> */}
+                  </View>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+          <View style={layout_styles.plusButtonContainer}>
+            {/* <TouchableOpacity onPress={toggleModal}> */}
+              <AntDesign name="pluscircle" size={width/5} color={scheme.plusButton} />
+            {/* </TouchableOpacity> */}
           </View>
         </View>
-        <View style={layout_styles.plusButtonContainer}>
-          {/* <TouchableOpacity onPress={toggleModal}> */}
-            <AntDesign name="pluscircle" size={width/5} color={scheme.plusButton} />
-          {/* </TouchableOpacity> */}
         </View>
          {/* Modals */}
          {customActInfo && (<CustomActivityEdit style={personalizeStyles.editModal} ActivityDescribeVisible={customActEditVisible} Info={customActInfo as ButtonState} onClose={() => setCustomActEditVisible(false)} onTapOut={() => setCustomActEditVisible(false)}/>)}
           <CreateRoutineModal style={{}} MultitaskModalVisible={createRoutineModalVisible} onNext={handleSubmitRoutineModal} customRoutine={tappedRout} onTapOut={() => setCreateRoutineModalVisible(false)}/>
         </View> 
-        </>
+        
     )
 }
 

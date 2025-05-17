@@ -6,6 +6,8 @@
       tags: string[];
       movementIntensity?: number;
       category?: string[]
+      color?: string;
+      media?: string;
       pressed: boolean;
       id?: string;
     };

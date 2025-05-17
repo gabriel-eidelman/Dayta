@@ -1,7 +1,14 @@
+/* A collection of utility functions for handling date and time operations.
+   This module includes functions for converting time formats, calculating durations,
+   generating time blocks, and working with sunrise/sunset times.
+*/
+
 import SunCalc from 'suncalc';
 import { DateTime } from 'luxon';
+import { TimeBlock } from '@/Types/ActivityTypes';
+import { TimeSelection } from '@/Types/TimeType';
 
-export const convertTimeToUnix = (timeString: string, date: Date = new Date()): number => {
+const convertTimeToUnix = (timeString: string, date: Date = new Date()): number => {
     // Parse the time string
     if(timeString!=="888") {
     const [time, period] = timeString.split(' ');
@@ -35,7 +42,50 @@ export const convertTimeToUnix = (timeString: string, date: Date = new Date()): 
   }
   };
 
-  export const timeStringToSeconds = (timeString: string): number => {
+const formatNewTime = (selectedTime: TimeSelection) => {
+  return `${parseInt(selectedTime.hour)}:${selectedTime.minute} ${selectedTime.period}`;
+};
+
+      // Function to convert duration input to seconds
+      function convertDurationToSeconds(minutes: number): number {
+        return (minutes * 60);
+      }
+      
+      // Function to create a TimeBlock based on user input
+      function createTimeBlock(startTime: string, endTime: string, dateIncrement: number): TimeBlock {
+        // am i turning time into unix and then right back? seems strange
+        const startTimeUnix = convertTimeToUnix(startTime); // Convert start time to Unix timestamp
+        // const durationSeconds = convertDurationToSeconds(durationMinutes); // Convert duration to seconds
+        const localDate = new Date(startTimeUnix * 1000); 
+        const offset = localDate.getTimezoneOffset(); // Time zone offset in minutes
+        const utcZonedTime = dateIncrement==0 ? new Date(localDate.getTime() + offset * 60000) : adjustDateByDays(new Date(localDate.getTime() + offset * 60000), dateIncrement);
+        let unixTimestamp = Math.floor(utcZonedTime.getTime() / 1000);
+        if(localDate.getUTCHours()<4) {
+          unixTimestamp = unixTimestamp+86400
+        }
+        const endTimeUnix = convertTimeToUnix(endTime); // Convert start time to Unix timestamp
+        // const durationSeconds = convertDurationToSeconds(durationMinutes); // Convert duration to seconds
+        const localEnd = new Date(endTimeUnix * 1000);
+        const endOffset = localEnd.getTimezoneOffset();
+        const utcZonedEndTime = dateIncrement == 0 
+          ? new Date(localEnd.getTime() + endOffset * 60000)
+          : adjustDateByDays(new Date(localEnd.getTime() + endOffset * 60000), dateIncrement);
+        let unixEndTimestamp = Math.floor(utcZonedEndTime.getTime() / 1000);
+        if(localEnd.getUTCHours()<4) {
+          unixEndTimestamp = unixEndTimestamp+86400
+        }
+        // let endTimeUnix = null
+        // if(startTimeUnix % 60 !== 31) {
+        //   endTimeUnix = unixTimestamp + durationSeconds; // Calculate end time
+        // }
+        return {
+          startTime: unixTimestamp,
+          duration: endTimeUnix-startTimeUnix,
+          endTime: unixEndTimestamp,
+        };
+      }
+
+export const timeStringToSeconds = (timeString: string): number => {
     // Split the time string into hours and minutes
     const [hours, minutes] = timeString.split(':').map(Number);
   
@@ -49,7 +99,7 @@ export const convertTimeToUnix = (timeString: string, date: Date = new Date()): 
   };
   
 
-  export function adjustDateByDays(date: Date, days: number): Date {
+function adjustDateByDays(date: Date, days: number): Date {
     // Create a copy of the original date to avoid mutating it
     const adjustedDate = new Date(date);
   
@@ -68,7 +118,19 @@ export const convertTimeToUnix = (timeString: string, date: Date = new Date()): 
     return adjustedDate;
   }
 
-  export const decimalToTime = (decimal: number): string => {
+  const generateTimeString = (selectedTime: TimeSelection) => {
+    //const localTime = 
+    let timeString="888"
+    if(selectedTime.hour && selectedTime.minute && selectedTime.period) {
+      timeString = selectedTime.hour + ":" + selectedTime.minute + " " + selectedTime.period
+    }
+    else {
+    }
+    console.log("generated time string", timeString)
+    return timeString
+  }
+
+const decimalToTime = (decimal: number): string => {
     // Normalize the decimal by handling values above 24 (i.e., past midnight)
     if (decimal >= 24) {
       decimal -= 24;
@@ -90,7 +152,7 @@ export const convertTimeToUnix = (timeString: string, date: Date = new Date()): 
     return `${hours12}:${formattedMinutes} ${period}`;
   };
   
-  export const decimalToDurationTime = (decimal: number): string => {
+const decimalToDurationTime = (decimal: number): string => {
     // Extract hours and minutes from the decimal number
     const hours = Math.floor(decimal);
     const minutes = Math.round((decimal - hours) * 60);
@@ -102,7 +164,7 @@ export const convertTimeToUnix = (timeString: string, date: Date = new Date()): 
     // Return time in 'HH:MM' format
     return `${formattedHours}:${formattedMinutes}`;
   };
-export const formatSecondsToHHMM = (seconds: number): string => {
+const formatSecondsToHHMM = (seconds: number): string => {
     // Calculate hours and minutes from the total seconds
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -115,7 +177,7 @@ export const formatSecondsToHHMM = (seconds: number): string => {
     return `${formattedHours}:${formattedMinutes}`;
   };
   
-export function getSunriseSunset(date: Date, timeZone: string): { sunrise: string; sunset: string } {
+function getSunriseSunset(date: Date, timeZone: string): { sunrise: string; sunset: string } {
   // Create a DateTime object in the given time zone
   
   // Calculate sunrise and sunset times using SunCalc
@@ -157,7 +219,7 @@ function getCoordinatesFromTimeZone(timeZone: string): TimeZoneCoordinates | nul
   return timeZoneMap[timeZone] || null;
 }
 
-export const generateISODate = (adjustment: number, userTimeZone: string) => {
+const generateISODate = (adjustment: number, userTimeZone: string) => {
   const nowInUserTimezone = DateTime.now().setZone(userTimeZone).plus({ days: adjustment })
   const dateIso = nowInUserTimezone.toISO()
   let finalIso = ""
@@ -168,3 +230,5 @@ export const generateISODate = (adjustment: number, userTimeZone: string) => {
   return finalIso
   
 }
+
+export {generateISODate, getSunriseSunset, formatSecondsToHHMM, decimalToTime, decimalToDurationTime, adjustDateByDays, createTimeBlock, convertDurationToSeconds, formatNewTime, convertTimeToUnix, generateTimeString} 

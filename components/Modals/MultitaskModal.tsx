@@ -7,7 +7,7 @@ import Slider from '@react-native-community/slider';
 import {useAppContext} from '@/contexts/AppContext'
 import {useAuth} from '@/contexts/AuthContext'
 import FetchDayActivities from '@/Data/FetchDayActivities'
-import ActivitySearchModal from '../Modals/ActivitySearchModal'
+import ActivitySearchModal from '../Deprecated/ActivitySearchModal'
 import { SearchBar } from '@rneui/themed'
 
 const {width, height} = Dimensions.get("window");
