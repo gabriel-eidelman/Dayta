@@ -8,7 +8,7 @@ export const useLogout = () => {
   const logout = async () => {
     try {
       await signOut(getAuth());
-      router.replace('/loginscreen'); // Redirect to login page after logout
+      router.replace('/Login'); // Redirect to login page after logout
     } catch (error) {
       console.error('Logout failed', error);
       // Handle errors here (e.g., show an alert or toast)

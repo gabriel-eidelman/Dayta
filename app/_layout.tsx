@@ -5,7 +5,8 @@
 // import { useEffect } from 'react';
 // import 'react-native-reanimated';
 
-// import { useColorScheme } from '@/hooks/useColorScheme';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import GlobalStatusBar from '@/hooks/statusBar';
 
 // // Prevent the splash screen from auto-hiding before asset loading is complete.
 // SplashScreen.preventAutoHideAsync();
@@ -65,11 +66,21 @@ const AuthCheck: React.FC = () => {
 };
 
 const RootLayout: React.FC = () => {
+  const [appReady, setAppReady] = React.useState(false);
+
+  // Delay rendering of the layout until after first mount
+  React.useEffect(() => {
+    setTimeout(() => setAppReady(true), 100); // small delay to wait for context/setup
+  }, []);
+
+  if (!appReady) return null; // Prevent pre-mature rendering
+
   return (
     <AuthProvider>
       <AuthCheck />
       <AppProvider>
-      <Stack>
+      <GlobalStatusBar/>
+      <Stack >
         {/* Define your routes here */}
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />

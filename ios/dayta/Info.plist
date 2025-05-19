@@ -24,7 +24,6 @@
 	<string>????</string>
 	<key>NSJournalingSuggestionsUsageDescription</key>
 	<string>We need access to provide personalized journaling suggestions.</string>
-
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

@@ -264,7 +264,6 @@ function Journal() {
     //   setNoStartModalVisible(true);
     // }
   return (
-    //addHabitModalVisible ? {opacity: 0.4} : {opacity: 1}
       <View style={[layout_styles.layoutContainer]}>
         {/* Global Modals */}
         <AddHabitModal isOpen={addHabitModalVisible} onApplePickerPress={handleAppleTrigger} onCustomHabitPress={handleCustomHabitPress} onClose={toggleAddHabitModal} />
@@ -314,8 +313,8 @@ function Journal() {
               </View>
             )} */}
             <Animated.View
-  {...panResponder.panHandlers}
-  style={{ flex: 1, opacity: fadeAnim }}>
+            {...panResponder.panHandlers}
+            style={{ flex: 1, opacity: fadeAnim }}>
             {withSunriseSunset.length>0 ? 
             <KeyboardAvoidingView 
             behavior= {'padding'}

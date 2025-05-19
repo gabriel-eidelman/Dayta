@@ -19,63 +19,65 @@ const { width, height } = Dimensions.get('window');
 export default function TabLayout() {
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: 'grey',
-        headerShown: false,
-        tabBarStyle: {
-          backgroundColor: scheme.white,
-          paddingTop: 10,
-          height: height/10,
-        },
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Journal',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'book' : 'book-outline'} color={scheme.mutedDarkGray} />
-          ),
+    <>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: 'grey',
+          headerShown: false,
+          tabBarStyle: {
+            backgroundColor: scheme.white,
+            paddingTop: 10,
+            height: height/10,
+          },
         }}
-      />
-      <Tabs.Screen
-        name="personalize"
-        options={{
-          title: 'Personalize',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'repeat' : 'repeat-outline'} color={scheme.mutedDarkGray} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="recommendations"
-        options={{
-          title: 'Recs',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'star' : 'star-outline'} color={scheme.mutedDarkGray} /> // Updated icon for recommendations
-          ),
-        }}
-      />
-      {/* <Tabs.Screen
-        name="stats"
-        options={{
-          title: 'Stats',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'stats-chart' : 'stats-chart-outline'} color={scheme.mutedDarkGray} /> // Updated icon for stats
-          ),
-        }}
-      /> */}
-      <Tabs.Screen
-        name="settings/index"
-        options={{
-          title: 'Settings',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'settings' : 'settings-outline'} color={scheme.mutedDarkGray} /> // Updated icon for settings
-          ),
-        }}
-      />
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: 'Journal',
+            tabBarIcon: ({ color, focused }) => (
+              <TabBarIcon name={focused ? 'book' : 'book-outline'} color={scheme.mutedDarkGray} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="personalize"
+          options={{
+            title: 'Personalize',
+            tabBarIcon: ({ color, focused }) => (
+              <TabBarIcon name={focused ? 'repeat' : 'repeat-outline'} color={scheme.mutedDarkGray} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="recommendations"
+          options={{
+            title: 'Recs',
+            tabBarIcon: ({ color, focused }) => (
+              <TabBarIcon name={focused ? 'star' : 'star-outline'} color={scheme.mutedDarkGray} /> // Updated icon for recommendations
+            ),
+          }}
+        />
+        {/* <Tabs.Screen
+          name="stats"
+          options={{
+            title: 'Stats',
+            tabBarIcon: ({ color, focused }) => (
+              <TabBarIcon name={focused ? 'stats-chart' : 'stats-chart-outline'} color={scheme.mutedDarkGray} /> // Updated icon for stats
+            ),
+          }}
+        /> */}
+        <Tabs.Screen
+          name="settings/index"
+          options={{
+            title: 'Settings',
+            tabBarIcon: ({ color, focused }) => (
+              <TabBarIcon name={focused ? 'settings' : 'settings-outline'} color={scheme.mutedDarkGray} /> // Updated icon for settings
+            ),
+          }}
+        />
 
-    </Tabs>
+      </Tabs>
+    </>
   );
 }
