@@ -3,10 +3,12 @@ import { Picker } from '@react-native-picker/picker';
 import {StyleSheet, View, Text} from 'react-native'
 import {ThemedText} from '../ThemedText'
 import {TimeSelection} from '@/Types/TimeType'
+import font_styles from '@/styles/reusable/typography';
 
 interface TimeDropdownProps {
     selectedTime: TimeSelection;
     onChange: (time: TimeSelection) => void;
+    type: string;
     // selectedHour: string;
     // selectedMinute: string;
     // selectedPeriod: string; // AM or PM
@@ -18,6 +20,7 @@ interface TimeDropdownProps {
 const TimeDropdown: React.FC<TimeDropdownProps> = ({   
   selectedTime,
   onChange,
+  type,
     // selectedHour,
     // selectedMinute,
     // selectedPeriod,
@@ -44,9 +47,10 @@ const TimeDropdown: React.FC<TimeDropdownProps> = ({
         const generatePeriodOptions = () => ['AM', 'PM'];
     
   return (
+    <>
+    <Text style={font_styles.h2}>{type}</Text>
     <View style={styles.container}>
       <View style={styles.pickerContainer}>
-        <Text style={styles.label}>Hour:</Text>
         <Picker
           selectedValue={selectedTime.hour}
           onValueChange={(itemValue) => onChange({hour: itemValue as string, minute: selectedTime.minute, period: selectedTime.period})}
@@ -58,7 +62,6 @@ const TimeDropdown: React.FC<TimeDropdownProps> = ({
         </Picker>
       </View>
       <View style={styles.pickerContainer}>
-        <Text style={styles.label}>Minute:</Text>
         <Picker
           selectedValue={selectedTime.minute}
           onValueChange={(itemValue) => onChange({hour: selectedTime.hour, minute: itemValue as string, period: selectedTime.period})}
@@ -70,7 +73,6 @@ const TimeDropdown: React.FC<TimeDropdownProps> = ({
         </Picker>
       </View>
       <View style={styles.pickerContainer}>
-        <Text style={styles.label}>Period:</Text>
         <Picker
           selectedValue={selectedTime.period}
           onValueChange={(itemValue) => onChange({hour: selectedTime.hour, minute: selectedTime.minute, period: itemValue as string})}
@@ -82,6 +84,7 @@ const TimeDropdown: React.FC<TimeDropdownProps> = ({
         </Picker>
       </View>
     </View>
+    </>
   );
 };
 

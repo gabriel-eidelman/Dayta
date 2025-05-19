@@ -22,16 +22,13 @@ const TimeModal = ({ visible, onClose, children }: TimeModalProps) => {
       animationType="fade"
       onRequestClose={onClose}
     >
-      <TouchableWithoutFeedback onPress={onClose}>
-        <View style={styles.overlay}>
-          <TouchableWithoutFeedback>
-            <View style={styles.modalContainer}>
-                {children}
-                <Button title="Done" onPress={onClose} style={styles.closeButton}/>
-            </View>
-          </TouchableWithoutFeedback>
+      <View style={styles.overlay}>        
+        <View style={styles.modalContainer}>
+          {children}
+          <View style={{ height: 120 }} />
+          <Button title="Done" onPress={onClose} style={styles.closeButton} />
         </View>
-      </TouchableWithoutFeedback>
+      </View>
     </Modal>
   );
 };
@@ -59,7 +56,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     },
   closeButton: {
-    marginTop: 120,
+
   },
 });
 

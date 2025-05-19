@@ -44,19 +44,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
   },
-  dropdownWrapper: {
-    // marginTop: 8,
-    // marginBottom: 12,
-    // backgroundColor: '#f9f9f9',
-    // borderRadius: 12,
-    // paddingVertical: 12,
-    // paddingHorizontal: 10,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 1 },
-    // shadowOpacity: 0.1,
-    // shadowRadius: 4,
-    // elevation: 2, // for Android shadow
-  },
+
   addButtonContainer: {
     alignItems: 'center',
   },
@@ -85,9 +73,9 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   timeText: {
-    // flex: 1,
     justifyContent: 'space-between',
     flexDirection: 'row',
+    paddingVertical: 1,
   }
 });
 

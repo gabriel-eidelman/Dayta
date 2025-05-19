@@ -120,12 +120,14 @@ const onClick = (text: string) => {
       <TimeDropdown
         selectedTime={startTime}
         onChange = {setStartTime}
+        type = "Start"
       />
     </TimeModal>
     <TimeModal visible={showEndTimePicker} onClose={() => setShowEndTimePicker(false)}>
       <TimeDropdown
         selectedTime={endTime}
         onChange={setEndTime}
+        type = "End"
       />
     </TimeModal>
     {/* Time Modal End*/}
@@ -171,6 +173,7 @@ const onClick = (text: string) => {
                         <Text>{formatNewTime(startTime)}</Text>
                       </View>
                     </Pressable>
+                    
                     <Pressable onPress={() => {setShowStartTimePicker(false); setShowEndTimePicker(prev => !prev)}}>
                       <View style={styles.timeText}>
                         <Text>End</Text>
