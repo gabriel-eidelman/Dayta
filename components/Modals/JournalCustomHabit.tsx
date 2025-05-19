@@ -1,17 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  ModalProps,
-  Pressable,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
-  SafeAreaView,
-  Dimensions,
-} from 'react-native';
+import {Modal,View,Text,ModalProps,Pressable,KeyboardAvoidingView,Platform,TouchableWithoutFeedback, StyleSheet, Keyboard,SafeAreaView,Dimensions,} from 'react-native';
 import TimeModal from './SetTimeModal';
 import layout_styles from '@/styles/reusable/layoutStyles';
 import font_styles from '@/styles/reusable/typography';
@@ -27,6 +15,7 @@ import {Button} from '@rneui/themed'
 import uuid from 'react-native-uuid';
 import {TimeSelection} from '@/Types/TimeType';
 import { Ionicons } from '@expo/vector-icons';
+import { BlurView } from '@react-native-community/blur';
 
 const MultiButton: ButtonState = {text: 'Multi-Activity', iconLibrary: "fontAwesome5", keywords: [], tags: [], icon: "tasks", pressed: false}
 
@@ -115,39 +104,28 @@ const onClick = (text: string) => {
       onRequestClose={onClose}
       {...modalProps}
     >
-    {/* Time Modal Start*/}
-    <TimeModal visible={showStartTimePicker} onClose={() => setShowStartTimePicker(false)}>
-      <TimeDropdown
-        selectedTime={startTime}
-        onChange = {setStartTime}
-        type = "Start"
-      />
-    </TimeModal>
-    <TimeModal visible={showEndTimePicker} onClose={() => setShowEndTimePicker(false)}>
-      <TimeDropdown
-        selectedTime={endTime}
-        onChange={setEndTime}
-        type = "End"
-      />
-    </TimeModal>
-    {/* Time Modal End*/}
     {/* Main Modal */}
-        <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.wrapper}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
-        >
+        {/* <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{flex: 1}}
+        > */}
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{flex: 1}}>
+            <BlurView
+              style={StyleSheet.absoluteFill}
+              blurType="light" // options: 'light', 'dark', 'extraLight', 'regular', etc.
+              blurAmount={10}
+              reducedTransparencyFallbackColor="white"
+            />
             <TouchableWithoutFeedback onPress={() => {setShowStartTimePicker(false); setShowEndTimePicker(false); setSelectedActivity(null); onClose()}}>
-              <View style={styles.backdrop} />
+              <></>
             </TouchableWithoutFeedback>
-
+            <View style={[styles.overlayWrapper]}>
             <View style={styles.overlay}>
               <SafeAreaView>
                 {/* Header */}
                 <View style={styles.headerRow}>
-                  <Pressable onPress={onClose}>
+                  <Pressable onPress={() => {setShowStartTimePicker(false); setShowEndTimePicker(false); setSelectedActivity(null); onClose()}}>
                     <Text style={styles.cancelText}>Cancel</Text>
                   </Pressable>
                   <Text style={font_styles.headerStyle}>Add Habit</Text>
@@ -195,21 +173,6 @@ const onClick = (text: string) => {
                       </View>
                     </Pressable>
                   </View>
-                  {/* <View style={styles.timeContainer}>
-                    <Pressable onPress={() => {setShowEndTimePicker(false); setShowStartTimePicker(prev => !prev)}}>
-                      <View style={styles.timeText}>
-                        <Text>Start</Text>
-                        <Text>{formatNewTime(startTime)}</Text>
-                      </View>
-                    </Pressable>
-                    
-                    <Pressable onPress={() => {setShowStartTimePicker(false); setShowEndTimePicker(prev => !prev)}}>
-                      <View style={styles.timeText}>
-                        <Text>End</Text>
-                        <Text>{formatNewTime(endTime)}</Text>
-                      </View>
-                    </Pressable>
-                  </View> */}
                 </View>
               </SafeAreaView>
               <View style={styles.addButtonContainer}>
@@ -217,8 +180,25 @@ const onClick = (text: string) => {
             </View>
             </View>
           </View>
+          </View>
         </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+      {/* </KeyboardAvoidingView> */}
+         {/* Time Modal Start*/}
+    <TimeModal visible={showStartTimePicker} onClose={() => setShowStartTimePicker(false)}>
+      <TimeDropdown
+        selectedTime={startTime}
+        onChange = {setStartTime}
+        type = "Start"
+      />
+    </TimeModal>
+    <TimeModal visible={showEndTimePicker} onClose={() => setShowEndTimePicker(false)}>
+      <TimeDropdown
+        selectedTime={endTime}
+        onChange={setEndTime}
+        type = "End"
+      />
+    </TimeModal>
+    {/* Time Modal End*/}
     </Modal>
   );
 };

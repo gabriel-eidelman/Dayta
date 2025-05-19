@@ -7,15 +7,6 @@ const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
 
-  backdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
-  },
-  overlayWrapper: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   overlay: {
     width: width * 0.94,
     backgroundColor: scheme.background,
@@ -32,6 +23,23 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
 
+  backdrop: {
+//      ...StyleSheet.absoluteFillObject,
+//   backgroundColor: 'rgba(0, 0, 0, 0.3)', // This creates the "blur" effect
+//   justifyContent: 'center',
+//   alignItems: 'center',
+  },
+  input: {
+    height: 50,
+    width: '100%',
+    borderColor: scheme.mint,
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 16,
+    paddingHorizontal: 12,
+    color: scheme.strongDarkGray,
+    backgroundColor: scheme.white,
+  },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -66,6 +74,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
 
   },
+
+  // timeContainer: {
+  //   backgroundColor: 'white',
+  //   borderRadius: 10,
+  //   padding: 12,
+  // },
   timeText: {
     justifyContent: 'space-between',
     flexDirection: 'row',

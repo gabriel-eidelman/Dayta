@@ -2,7 +2,7 @@ import {useAppContext, AppProvider} from '@/contexts/AppContext'
 import {ButtonState} from '@/Types/ActivityTypes'
 import {useAuth} from '@/contexts/AuthContext'
 import {useState, useRef, useEffect} from 'react'
-import {View, Text, TouchableOpacity, Dimensions, FlatList, Button} from 'react-native'
+import {View, Text, TouchableOpacity, Pressable, Dimensions, FlatList, Button} from 'react-native'
 import { Routine, Activity } from '@/Types/ActivityTypes'
 import CreateRoutineModal from '@/components/Modals/CreateRoutineModal'
 import uuid from 'react-native-uuid'
@@ -11,8 +11,9 @@ import CustomActivityEdit from '@/components/Modals/CustomActivityEdit'
 import layout_styles from '@/styles/reusable/layoutStyles';
 import font_styles from '@/styles/reusable/typography';
 import pickerSelectStyles from '@/utils/pickerSelectStyles'
-import personalizeStyles from '@/styles/personalizeStyles'
+import styles from '@/styles/personalizeStyles'
 import scheme from '@/utils/colorScheme'
+import CreateHabitModal from '@/components/Modals/CreateHabitModal'
 
 const {width} = Dimensions.get("window");
 
@@ -33,6 +34,7 @@ function Personalize() {
     const [customActEditVisible, setCustomActEditVisible] = useState<boolean>(false);
     const [tappedRout, setTappedRout] = useState<Routine>()
     const alphabeticalActs = customActivities.sort((a, b) => a.text.localeCompare(b.text));
+    const [createHabitModalVisible, setCreateHabitModalVisible] = useState(false);
 
     useEffect(() => {
       if(customActInfo) {
@@ -121,7 +123,17 @@ function Personalize() {
         }
       
     }
-    
+
+    // Callback fn for create habit modal
+    const handleCreateHabit = (inputText: string) => {
+      setCreateHabitModalVisible(false);
+          const newButton = {text: inputText, keywords: [], pressed: false, tags: []}
+        setTimeout(() => {
+          // add error handling
+          addCustomActivity(newButton);
+        }, 0)
+        // alert("successfully added custom activity. feel free to use it now as often as you'd like!")
+    }
     return (
 
         <View style={layout_styles.layoutContainer}>
@@ -133,18 +145,18 @@ function Personalize() {
             <Text style={font_styles.headerStyle}>Personalization</Text>
           </View>
           <View style={layout_styles.bodyContainer}>
-            <View style={personalizeStyles.habitListContainer}>
+            <View style={styles.habitListContainer}>
               <FlatList
                 ref={flatListRef}
                 data={alphabeticalActs}
                 keyExtractor={(item) => item.text}
-                style={personalizeStyles.flatList}
+                style={styles.flatList}
                 renderItem={({ item}) => ( 
                   <TouchableOpacity onPress={() => customActTapped(item)}>
-                    <View style={personalizeStyles.resultContainer}>
+                    <View style={styles.resultContainer}>
                         <Text style={font_styles.activityName}>{item.text}</Text>  
                         {/* <AntDesign name="edit" size={width / 15} color="orange" />
-                        <TouchableOpacity onPress={() => deleteCustomActivity(item)} style={personalizeStyles.touchableDelete}>
+                        <TouchableOpacity onPress={() => deleteCustomActivity(item)} style={styles.touchableDelete}>
                         <MaterialIcons name="delete" size={width / 15} color="black" />
                       </TouchableOpacity> */}
                   </View>
@@ -153,15 +165,16 @@ function Personalize() {
               />
             </View>
           <View style={layout_styles.plusButtonContainer}>
-            {/* <TouchableOpacity onPress={toggleModal}> */}
+            <Pressable onPress={() => setCreateHabitModalVisible(true)}>
               <AntDesign name="pluscircle" size={width/5} color={scheme.plusButton} />
-            {/* </TouchableOpacity> */}
+            </Pressable>
           </View>
         </View>
         </View>
          {/* Modals */}
-         {customActInfo && (<CustomActivityEdit style={personalizeStyles.editModal} ActivityDescribeVisible={customActEditVisible} Info={customActInfo as ButtonState} onClose={() => setCustomActEditVisible(false)} onTapOut={() => setCustomActEditVisible(false)}/>)}
-          <CreateRoutineModal style={{}} MultitaskModalVisible={createRoutineModalVisible} onNext={handleSubmitRoutineModal} customRoutine={tappedRout} onTapOut={() => setCreateRoutineModalVisible(false)}/>
+         {customActInfo && (<CustomActivityEdit style={styles.editModal} ActivityDescribeVisible={customActEditVisible} Info={customActInfo as ButtonState} onClose={() => setCustomActEditVisible(false)} onTapOut={() => setCustomActEditVisible(false)}/>)}
+          {/* <CreateRoutineModal style={{}} MultitaskModalVisible={createRoutineModalVisible} onNext={handleSubmitRoutineModal} customRoutine={tappedRout} onTapOut={() => setCreateRoutineModalVisible(false)}/> */}
+          <CreateHabitModal visible={createHabitModalVisible} onCreateHabit={handleCreateHabit} onClose={() => setCreateHabitModalVisible(false)} />
         </View> 
         
     )
