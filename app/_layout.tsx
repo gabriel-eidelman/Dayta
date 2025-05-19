@@ -52,7 +52,7 @@ const AuthCheck: React.FC = () => {
       if (user) {
         
       } else {
-        router.replace('/loginscreen'); // Redirect to the login page if not logged in
+        router.replace('/Login'); // Redirect to the login page if not logged in
       }
     }
   }, [user, loading, router]);
@@ -73,8 +73,9 @@ const RootLayout: React.FC = () => {
         {/* Define your routes here */}
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
-        <Stack.Screen name="loginscreen"/>
-        <Stack.Screen name="signupscreen" />
+        <Stack.Screen name="Login" />
+        <Stack.Screen name="Sign Up" />
+        <Stack.Screen name="info" options={{ headerShown: false }}/>
         {/* Add other screens as necessary */}
       </Stack>
       </AppProvider>
