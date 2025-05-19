@@ -6,7 +6,7 @@ const { width, height } = Dimensions.get('window');
 const buttonWidth = width/6.25
 import {useAuth} from '@/contexts/AuthContext'
 import {AppProvider, useAppContext} from '@/contexts/AppContext'
-import {useCustomSet} from '@/Data/CustomSet'
+import {StatGenerator} from '@/Data/StatGenerator'
 import PieChart from '@/components/Stats/PieChart'
 import BlockedTime from '@/components/TimeHandling/BlockedTime'
 import { Activity } from '@/Types/ActivityTypes';
@@ -51,7 +51,7 @@ const getTop9WithOther = (activities: ActivitySummary[]): ActivitySummary[] => {
 
 function Stats() {
   
-  const {state} = useCustomSet();
+  const {state} = StatGenerator();
   const { durationSummary, avgSleepTime, avgWakeTime, weekDurationSummary, sleepSum, tagDurationSum, todayTagDurationSum, summaryDurs } = state;
   const {justActivities} = useAppContext();
   const [durationSumState, setDurationSumState] = useState<ActivitySummary[]>([]);

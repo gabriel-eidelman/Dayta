@@ -4,7 +4,7 @@ import {useState, useEffect, useRef} from 'react'
 import FetchDayActivities from '@/Data/FetchDayActivities';
 import { useAuth } from '@/contexts/AuthContext';
 import { Activity, Card } from '@/Types/ActivityTypes';
-import { useCustomSet } from '@/Data/CustomSet';
+import { StatGenerator } from '@/Data/StatGenerator';
 import { useAppContext } from '@/contexts/AppContext';
 import Swiper from 'react-native-deck-swiper';
 import LogicModal from '@/components/Modals/LogicModal'
@@ -35,7 +35,7 @@ const decimalToTime = (decimal: number): string => {
 };
 
 export default function Recommendations() {
-  const {state} = useCustomSet();
+  const {state} = StatGenerator();
   const {sleepSum, avgLoggedTimeDaily} = state
   const [logicModalVisible, setLogicModalVisible] = useState<boolean>(false);
 

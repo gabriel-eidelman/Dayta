@@ -67,16 +67,55 @@ const styles = StyleSheet.create({
 
   },
 
-  timeContainer: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 12,
-  },
+  // timeContainer: {
+  //   backgroundColor: 'white',
+  //   borderRadius: 10,
+  //   padding: 12,
+  // },
   timeText: {
     justifyContent: 'space-between',
     flexDirection: 'row',
     paddingVertical: 1,
-  }
+  },
+  timeContainer: {
+  gap: 12,
+  marginBottom: 24,
+  },
+
+timeRow: {
+  backgroundColor: '#F2F2F7',
+  borderRadius: 10,
+  paddingVertical: 12,
+  paddingHorizontal: 14,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  shadowColor: '#000',
+  shadowOpacity: 0.05,
+  shadowRadius: 4,
+  elevation: 2,
+},
+
+timeContent: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  flex: 1,
+  justifyContent: 'space-between',
+},
+
+timeLabel: {
+  fontSize: 16,
+  color: '#444',
+  marginLeft: 8,
+  flex: 1,
+},
+
+timeValue: {
+  fontSize: 16,
+  fontWeight: '500',
+  color: '#000',
+},
+
 });
 
 export default styles;

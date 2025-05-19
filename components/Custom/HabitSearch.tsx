@@ -13,13 +13,15 @@ const HabitSearch: React.FC<HabitSearchProps> = ({ onClick }) =>{
     const {customActivities} = useAppContext();
     const [query, setQuery] = useState<string>('');
     const [results, setResults] = useState<ButtonState[]>(customActivities);
-    
+    const [showResults, setShowResults] = useState(true);
+
     useEffect(() => {
         const alphabeticalActs = customActivities.sort((a, b) => a.text.localeCompare(b.text));
         setResults(alphabeticalActs);
     }, [customActivities])
     const handleSearch = (text: string) => {
         setQuery(text);
+        setShowResults(true); // Ensure results show while typing
         if (text.trim() === '') {
         setResults(customActivities);
         } else {
@@ -34,7 +36,14 @@ const HabitSearch: React.FC<HabitSearchProps> = ({ onClick }) =>{
     const clearSearch = () => {
         setQuery('');
         setResults(customActivities);
-      };
+        setShowResults(true);
+    };
+
+    const handleItemPress = (text: string) => {
+      setShowResults(false);
+      Keyboard.dismiss();
+      onClick(text);
+    };
 
     return (
       
@@ -45,6 +54,7 @@ const HabitSearch: React.FC<HabitSearchProps> = ({ onClick }) =>{
             onChangeText={handleSearch}
             onClear={clearSearch}
             platform="default"
+            onFocus={() => setShowResults(true)}
             autoFocus={true}
             round
             containerStyle={styles.searchBarContainer}
@@ -52,19 +62,21 @@ const HabitSearch: React.FC<HabitSearchProps> = ({ onClick }) =>{
             inputStyle={styles.searchBarInput}
           />
           
+        {showResults && (
           <FlatList
             data={results}
             keyExtractor={(item) => item.text}
             style={styles.flatList}
             renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => onClick(item.text)}>
-              <View style={styles.resultContainer}>
+              <TouchableOpacity onPress={() => handleItemPress(item.text)}>
+                <View style={styles.resultContainer}>
                   <Text style={styles.resultText}>{item.text}</Text>
-              </View>
+                </View>
               </TouchableOpacity>
             )}
             keyboardShouldPersistTaps="handled"
           />
+        )}
         </View>
     )
 }

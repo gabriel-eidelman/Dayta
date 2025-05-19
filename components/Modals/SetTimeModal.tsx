@@ -22,13 +22,18 @@ const TimeModal = ({ visible, onClose, children }: TimeModalProps) => {
       animationType="fade"
       onRequestClose={onClose}
     >
-      <View style={styles.overlay}>        
-        <View style={styles.modalContainer}>
-          {children}
-          <View style={{ height: 120 }} />
-          <Button title="Done" onPress={onClose} style={styles.closeButton} />
+      <TouchableWithoutFeedback onPress={onClose}>
+        <View style={styles.overlay}>
+          <TouchableWithoutFeedback>
+            <View style={styles.modalContainer}>
+                {children}
+                {/* Spacer for done button */}
+                <View style={{height: 120}} />
+                <Button title="Done" onPress={onClose} style={styles.closeButton}/>
+            </View>
+          </TouchableWithoutFeedback>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };

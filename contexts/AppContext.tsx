@@ -6,7 +6,7 @@ import { DateTime } from 'luxon';
 import {Activity, ButtonState, DatedActivities, ActivitySummary, StatisticsState, Routine} from '@/Types/ActivityTypes'
 import {ActivityButtons, shuffle} from '@/Data/FetchCustomActivities';
 import { storage } from '@/utils/mmkvStorage';
-import {useCustomSet} from '@/Data/CustomSet'
+import {StatGenerator} from '@/Data/StatGenerator'
 import FetchDayActivities from '@/Data/FetchDayActivities';
 
 type UpdateState = (newState: Partial<StatisticsState>) => void;

@@ -12,10 +12,10 @@ import uuid from 'react-native-uuid';
 import DurationModal from './DurationModal'
 import MultitaskModal from './MultitaskModal'
 import ActivitySearchModal from './ActivitySearchModal'
-import { useCustomSet} from '@/Data/CustomSet'
+import { StatGenerator} from '@/Data/StatGenerator'
 import Toast from 'react-native-toast-message'
 import {ButtonState, Activity, TimeBlock, Routine} from '@/Types/ActivityTypes'
-import AddRoutineModal from './AddRoutineModal';
+import AddRoutineModal from '../Modals/AddRoutineModal';
 
 //next: add search
 //after: add functionality to change what shows up on quick add based on an array of 9 quick add options that we can pass in
@@ -78,7 +78,7 @@ const MultiButton: ButtonState = {text: 'Multi-Activity', iconLibrary: "fontAwes
 
 const MyModal: React.FC<MyModalProps> = ({ visible, onClose, ...modalProps }) => {
   const { addActivity, customActivities, customRoutines, addRoutineActivities} = useAppContext();
-  const {finalArray} = useCustomSet();
+  const {finalArray} = StatGenerator();
   const [searchModalVisible, setSearchModalVisible] = useState<boolean>(false);
   const [MultitaskModalVisible, setMultitaskModalVisible] = useState<boolean>(false);
   const [addRoutineModal, setAddRoutineModal] = useState<boolean>(false);

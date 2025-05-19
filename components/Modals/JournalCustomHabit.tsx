@@ -26,6 +26,7 @@ import {ButtonState, Activity, TimeBlock, ActivityWithEnd} from '@/Types/Activit
 import {Button} from '@rneui/themed'
 import uuid from 'react-native-uuid';
 import {TimeSelection} from '@/Types/TimeType';
+import { Ionicons } from '@expo/vector-icons';
 
 const MultiButton: ButtonState = {text: 'Multi-Activity', iconLibrary: "fontAwesome5", keywords: [], tags: [], icon: "tasks", pressed: false}
 
@@ -52,7 +53,6 @@ const {user} = useAuth();
 const [dbActivities, setDbActivities] = useState<Activity[]>([]);
 
 const onClick = (text: string) => {
-        Keyboard.dismiss();
         const activity = customActivities.find((item: ButtonState) => item.text===text)
           
         if(activity) {
@@ -165,8 +165,37 @@ const onClick = (text: string) => {
                 {/* Time Pickers */}
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Time</Text>
+                  {/* Start Time, End Time Display */}
                   <View style={styles.timeContainer}>
-                    {/* Start Time, End Time Display */}
+                    <Pressable
+                      style={styles.timeRow}
+                      onPress={() => {
+                        setShowEndTimePicker(false);
+                        setShowStartTimePicker(prev => !prev);3
+                      }}
+                    >
+                      <View style={styles.timeContent}>
+                        <Ionicons name="time-outline" size={20} color="#444" />
+                        <Text style={styles.timeLabel}>Start Time</Text>
+                        <Text style={styles.timeValue}>{formatNewTime(startTime)}</Text>
+                      </View>
+                    </Pressable>
+
+                    <Pressable
+                      style={styles.timeRow}
+                      onPress={() => {
+                        setShowStartTimePicker(false);
+                        setShowEndTimePicker(prev => !prev);
+                      }}
+                    >
+                      <View style={styles.timeContent}>
+                        <Ionicons name="time-outline" size={20} color="#444" />
+                        <Text style={styles.timeLabel}>End Time</Text>
+                        <Text style={styles.timeValue}>{formatNewTime(endTime)}</Text>
+                      </View>
+                    </Pressable>
+                  </View>
+                  {/* <View style={styles.timeContainer}>
                     <Pressable onPress={() => {setShowEndTimePicker(false); setShowStartTimePicker(prev => !prev)}}>
                       <View style={styles.timeText}>
                         <Text>Start</Text>
@@ -180,7 +209,7 @@ const onClick = (text: string) => {
                         <Text>{formatNewTime(endTime)}</Text>
                       </View>
                     </Pressable>
-                  </View>
+                  </View> */}
                 </View>
               </SafeAreaView>
               <View style={styles.addButtonContainer}>
