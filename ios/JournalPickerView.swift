@@ -33,7 +33,7 @@ struct JournalPickerView: View {
           let duration = end.timeIntervalSince(start)
 
           
-          timeblock = [
+          timeblock = [ 
             "startTime": start.timeIntervalSince1970,
             "endTime": end.timeIntervalSince1970,
             "duration": duration

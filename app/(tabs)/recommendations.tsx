@@ -1,4 +1,4 @@
-import { StyleSheet, View, Dimensions, TouchableOpacity, Text, Platform, SafeAreaView, Animated, Easing} from 'react-native';
+import { View, Dimensions, Text, Platform, SafeAreaView, Button, Animated, Easing} from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import {useState, useEffect, useRef} from 'react'
 import FetchDayActivities from '@/Data/FetchDayActivities';
@@ -12,6 +12,7 @@ import CustomButton from '@/components/Custom/CustomButton'
 import {PremadeCards} from '@/Data/PremadeCards'
 import layout_styles from '@/styles/reusable/layoutStyles';
 import font_styles from '@/styles/reusable/typography';
+import styles from '@/styles/recommendationsStyles'
 
 //import firestore from '@react-native-firebase/firestore'
 
@@ -152,39 +153,36 @@ export default function Recommendations() {
     return (
       <View style={styles.recContainer}>
         <View style={styles.recTitle}>
-        <Text style={styles.recText}>{cardIndex + 1}. </Text>
-          <Text style={[styles.recText, { color: 'white' }]}>{card.title}</Text>
+          <Text style={font_styles.h2}>{card.title}</Text>
         </View>
         <View style={styles.recCategory}>
-          <Text style={styles.recText}>Category: </Text>
-          <Text style={[styles.recText, { color: 'white' }]}>{card.recCategory}</Text>
+          <Text style={font_styles.h3}>Category: </Text>
+          <Text style={font_styles.body}>{card.recCategory}</Text>
         </View>
         <View style={styles.recCategory}>
-          <Text style={styles.recText}>Impact Score: </Text>
-          <Text style={[styles.recText, { color: 'white' }]}>{card.impactScore}/10</Text>
+          <Text style={font_styles.h3}>Impact Score: </Text>
+          <Text style={font_styles.body}>{card.impactScore}/10</Text>
         </View>
         <View style={styles.recCategory}>
-          <Text style={styles.recText}>Details: </Text>
-          <Text style={[styles.recText, { color: 'white' }]}>{card.recDetails}</Text>
+          {/* <Text style={[font_styles.h3, {gap: 10}]}>Details: </Text> */}
+          <Text style={font_styles.body}>{card.recDetails}</Text>
         </View>
         <View style={styles.diveInButtonContainer}>
-          <CustomButton title="Dive In" onPress={diveInPressed} />
+          <Button title="Dive In" onPress={diveInPressed} />
         </View>
       </View>
     );
   };
 
   return (
-    <View style={layout_styles.layoutContainer}>
+    <View style={styles.layoutContainer}>
       {/* Modals */}
       <LogicModal visible={logicModalVisible} card={cards[cardIndex]} onClose={() => setLogicModalVisible(false)}/>
 
       <View style={layout_styles.titleContainer}>
         <Text style={font_styles.headerStyle}>Recommendations</Text>
       </View>
-      <View style={layout_styles.bodyContainer}>
-
-        <SafeAreaView style={{flex: 1}}>
+      <View style={styles.bodyContainer}>
           <Swiper
             ref={swiperRef}
             cards={cards}
@@ -198,120 +196,57 @@ export default function Recommendations() {
             disableRightSwipe={cardIndex <= 0} // Disable right swipe at the last card
             disableLeftSwipe={cardIndex >= cards.length - 1} // Disable left swipe at the first card
             animateCardOpacity
-            backgroundColor="transparent"
             cardHorizontalMargin={0}
             cardVerticalMargin={0}
-            useViewOverflow={Platform.OS === 'ios'}
+            // useViewOverflow={Platform.OS === 'ios'}
             infinite={false}
             showSecondCard={false}
+            backgroundColor='transparent'
             key={cardIndex}  // Force re-render on card index change
             stackSeparation={15}
-            overlayLabels={{
-              left: {
-                title: 'Next',
-                style: {
-                  label: {
-                    backgroundColor: 'green',
-                    borderColor: 'green',
-                    color: 'white',
-                    borderWidth: 1,
-                  },
-                  wrapper: {
-                    flexDirection: 'column',
-                    alignItems: 'flex-end',
-                    justifyContent: 'flex-start',
-                    marginTop: 20,
-                    marginLeft: -20,
-                  },
-                },
-              },
-              right: {
-                title: 'Prev',
-                style: {
-                  label: {
-                    backgroundColor: 'green',
-                    borderColor: 'green',
-                    color: 'white',
-                    borderWidth: 1,
-                  },
-                  wrapper: {
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                    justifyContent: 'flex-start',
-                    marginTop: 20,
-                    marginLeft: 20,
-                  },
-                },
-              },
-            }}
+            // overlayLabels={{
+            //   left: {
+            //     title: 'Next',
+            //     style: {
+            //       label: {
+            //         backgroundColor: 'green',
+            //         borderColor: 'green',
+            //         color: 'white',
+            //         borderWidth: 1,
+            //       },
+            //       wrapper: {
+            //         flexDirection: 'column',
+            //         alignItems: 'flex-end',
+            //         justifyContent: 'flex-start',
+            //         marginTop: 20,
+            //         marginLeft: -20,
+            //       },
+            //     },
+            //   },
+            //   right: {
+            //     title: 'Prev',
+            //     style: {
+            //       label: {
+            //         backgroundColor: 'green',
+            //         borderColor: 'green',
+            //         color: 'white',
+            //         borderWidth: 1,
+            //       },
+            //       wrapper: {
+            //         flexDirection: 'column',
+            //         alignItems: 'flex-start',
+            //         justifyContent: 'flex-start',
+            //         marginTop: 20,
+            //         marginLeft: 20,
+            //       },
+            //     },
+            //   },
+            // }}
           />
-        </SafeAreaView>
+          </View>
         <Animated.View style={[styles.arrowContainer, { transform: [{ translateX: arrowTranslateX }] }]}>
         <Text style={styles.arrowText}>→</Text>
       </Animated.View>
-      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  layoutContainer: {
-    flex: 1,
-    paddingTop: height/18,
-    backgroundColor: '#1B1B1B',
-    position: 'relative', // Container must be relative for absolute positioning of child
-  },
-  contentContainer: {
-    flex: 1,
-    paddingBottom: height/11.6, // Space at the bottom to accommodate the button
-  },
-  titleContainer: {
-    alignItems: 'center',
-    padding: 10,
-  },
-  detailsButton: {
-    backgroundColor: 'red'
-  },
-  stepContainer: {
-    padding: 8,
-    marginBottom: 10,
-
-  },
-  // infoButtonContainer: {
-  //   marginTop: 'auto',
-  //   marginBottom: 10,
-  //   alignItems: 'center'
-  // },
-  diveInButtonContainer: {
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  recContainer: {
-    // borderColor: 'orange',
-    // borderWidth: 2,
-    // borderRadius: 20,
-    padding: 20
-  },
-  recTitle: {
-
-    flexDirection: 'row',
-    
-  },
-  recCategory: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    flexWrap: 'wrap'
-  },
-  recText: {
-    fontSize: 20, color: 'orange', fontStyle: 'italic'
-  },
-  arrowContainer: {
-    position: 'absolute',
-    bottom: 30,
-    right: 20,
-  },
-  arrowText: {
-    fontSize: 40,
-    color: '#000',
-  },
-});
