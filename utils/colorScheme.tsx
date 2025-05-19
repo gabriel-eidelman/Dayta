@@ -5,6 +5,7 @@ interface ColorScheme {
     mutedDarkGray: string,
     plusButton: string,
     white: string,
+    mint: string,
 }
 
 /*
@@ -26,6 +27,7 @@ const lightScheme: ColorScheme = {
     mutedDarkGray: "#666666",
     plusButton: "#D8CAB8",
     white: "#FFFFFF",
+    mint: "mintcream",
     // primary: "#1e90ff",
     // secondary: "#ff6347",
     // accent: "#32cd32",
@@ -38,6 +40,7 @@ const darkScheme: ColorScheme = {
     mutedDarkGray: "#AAAAAA",  // muted, but clear enough for subtitles
     plusButton: "#B5A58D",     // muted tan, echoes the plus button color
     white: "#FFFFFF",          // keep true white for occasional highlights
+    mint: "mintcream"
     // primary: "#6495ED",     // optional: soft cornflower blue for links/buttons
     // secondary: "#FF8264",   // optional: softened coral
     // accent: "#7ED957",      // optional: fresh green accent

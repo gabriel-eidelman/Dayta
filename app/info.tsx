@@ -1,8 +1,9 @@
-import {ThemedText} from '@/components/ThemedText'
-import { saveUserData, getUserData } from '@/utils/firestore';
+import {getUserData } from '@/utils/firestore';
 import {useAuth} from '@/contexts/AuthContext'
 import {useState, useEffect} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, View, Text} from 'react-native'
+import layout_styles from '@/styles/reusable/layoutStyles';
+import font_styles from'@/styles/reusable/typography'
 
 export default function Info() {
     const [userData, setUserData] = useState<any>(null);
@@ -21,17 +22,16 @@ export default function Info() {
   }, [user]);
 
   return(
-    <View style={styles.layoutContainer}>
-      {user && userData ? <ThemedText type="journalText"> Email: {user.email}</ThemedText> : <ThemedText type="journalText">Add "Data" To Firestore</ThemedText>}
-    </View>
+    <View style={layout_styles.layoutContainer}>
+      <View style={layout_styles.titleContainer}>
+        <Text style={font_styles.headerStyle}>Info</Text>
+      </View>
+      <View style={layout_styles.bodyContainer}>
+        {user && userData ? 
+        <Text style={font_styles.body}>Email: {user.email}</Text> 
+        : 
+        <Text>Add "Data" To Firestore</Text>}
+      </View>
+      </View>
   );
 }
-
-const styles = StyleSheet.create({
-  layoutContainer: {
-    flex: 1,
-    paddingTop: 10,
-    backgroundColor: 'darkcyan',
-    position: 'relative', // Container must be relative for absolute positioning of child
-  },
-})

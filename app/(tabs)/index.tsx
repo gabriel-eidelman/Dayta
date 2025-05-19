@@ -1,4 +1,4 @@
-import { StyleSheet, View, Dimensions, FlatList, Text, TouchableOpacity, ScrollView, Button, TextInput, KeyboardAvoidingView} from 'react-native';
+import { StyleSheet, View, Dimensions, FlatList, Text, TouchableOpacity, PanResponder, Animated, KeyboardAvoidingView} from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { useState, useEffect, useRef } from 'react';
 import {AntDesign, MaterialIcons, Ionicons, Feather, MaterialCommunityIcons, FontAwesome5} from '@expo/vector-icons';
@@ -30,9 +30,9 @@ const buttonWidth = width/6.25
 
 function Journal() {
 
+  /* STATE VARIABLES */
   const { user } = useAuth();
   const [dbActivities, setDbActivities] = useState<Activity[]>([]);
-
   const [version, setVersion] = useState(0)
   const [activityInfo, setActivityInfo] = useState<Activity>()
   const [sunriseTime, setSunriseTime] = useState<number>(0);
@@ -41,7 +41,41 @@ function Journal() {
   // const [showAuth, setShowAuth] = useState<boolean>(false);
   const [suggestion, setSuggestion] = useState<JournalSuggestion | null>(null);
   const [error, setError] = useState<string | null>(null);
+  /* Animations */
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
+  const handleSwipe = (direction: number) => {
+  Animated.sequence([
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 150,
+      useNativeDriver: true,
+    }),
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 150,
+      useNativeDriver: true,
+    }),
+  ]).start();
+
+  setDateIncrement(prev => prev + direction);
+};
+
+  const panResponder = useRef(
+  PanResponder.create({
+    onMoveShouldSetPanResponder: (_, gestureState) => {
+      return Math.abs(gestureState.dx) > 20; // Trigger only if horizontal swipe
+    },
+    onPanResponderRelease: (_, gestureState) => {
+      if (gestureState.dx > 50) {
+        handleSwipe(-1); // Swipe right: go back
+      } else if (gestureState.dx < -50) {
+        handleSwipe(1); // Swipe left: go forward
+      }
+    },
+  })
+).current;
+/* Animation End */
 
   const storedToken = storage.getString('AuthToken')
 
@@ -244,11 +278,11 @@ function Journal() {
           </View>
           <View style={layout_styles.bodyContainer}>
             <View style={layout_styles.headerContainer}>
-              <TouchableOpacity onPress={() => setDateIncrement(dateIncrement-1)}>
+              {/* <TouchableOpacity onPress={() => setDateIncrement(dateIncrement-1)}>
                       <View style={styles.incrementButtonContainer}>
                         <Ionicons name="return-up-back" size={height/27} color="#F5F5F5"/>
                       </View>
-              </TouchableOpacity>   
+              </TouchableOpacity>    */}
               <Text style={styles.dateText}>{localTime.toFormat('cccc LLLL d')}</Text>
               {/* <TouchableOpacity onPress={() => setDateIncrement(dateIncrement+1)}>
                     <View style={styles.incrementButtonContainer}>
@@ -279,6 +313,9 @@ function Journal() {
                 )}
               </View>
             )} */}
+            <Animated.View
+  {...panResponder.panHandlers}
+  style={{ flex: 1, opacity: fadeAnim }}>
             {withSunriseSunset.length>0 ? 
             <KeyboardAvoidingView 
             behavior= {'padding'}
@@ -298,6 +335,8 @@ function Journal() {
                   Add Your First Activity For The Day!
                 </ThemedText> */}
               </>}
+              </Animated.View>
+
             {/* <View style={styles.calendarButtonContainer}>
               <TouchableOpacity onPress={toggleNoStartModal}>
                 <AntDesign name="calendar" size={width/8} color="grey" />

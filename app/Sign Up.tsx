@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, Keyboard, Platform, TouchableWithoutFeedback, KeyboardAvoidingView} from 'react-native';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'expo-router';
 import {firestore} from '@/firebase/firebase'
 import { setDoc, doc } from 'firebase/firestore';
+import scheme from '@/utils/colorScheme';
 
 const setUserTimezone = async (userId: string, timezone: string) => {
   const userRef = doc(firestore, 'users', userId);
@@ -44,30 +45,34 @@ const SignUpScreen: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Sign Up</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="darkcyan"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="darkcyan"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        autoCapitalize="none"
-      />
-      <View style={styles.buttonContainer}>
-        <Button title="Sign Up" onPress={handleSignUp} color="mintcream" />
-      </View>
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+      >
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor={scheme.mutedDarkGray}
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          placeholderTextColor={scheme.mutedDarkGray}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          autoCapitalize="none"
+        />
+        <View style={styles.buttonContainer}>
+          <Button title="Sign Up" onPress={handleSignUp} />
+        </View>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -77,14 +82,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: 'darkcyan',
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 24,
-    color: 'mintcream',
-    textAlign: 'center',
+    backgroundColor: scheme.background,
   },
   input: {
     height: 50,
@@ -94,7 +92,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 16,
     paddingHorizontal: 12,
-    color: 'darkcyan',
+    color: scheme.strongDarkGray,
     backgroundColor: 'mintcream',
   },
   buttonContainer: {

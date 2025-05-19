@@ -118,15 +118,15 @@ function useCustomSet() {
             if(activity.button.tags) {
               const tag = activity.button.tags[0]
             // activity.button.tags.forEach(tag => {
-              const normalizedTag = tag.trim().toLowerCase();
-              if (acc[normalizedTag] && normalizedTag!=="null") {
-                // If the tag already exists, add the duration to the existing value
-                acc[normalizedTag] += activity.timeBlock.duration / 3600; // Convert seconds to hours
-              } else {
-                // If the tag does not exist, initialize it with the duration
-                if(normalizedTag!=="null")
+              
+              const normalizedTag = tag!=undefined ? tag.trim().toLowerCase() : "null";
+              if (normalizedTag!="null") {
                 acc[normalizedTag] = activity.timeBlock.duration / 3600; // Convert seconds to hours
               }
+              else if (acc[normalizedTag]) {
+                // If the tag already exists, add the duration to the existing value
+                acc[normalizedTag] += activity.timeBlock.duration / 3600; // Convert seconds to hours
+              } 
             // });
             return acc;
             }
@@ -196,13 +196,13 @@ function useCustomSet() {
     const activityText = relevantActivities.map((activity) => activity.button.text);
 
     // Step 1: Group activities by name and sum durations
-    const totalTimePerActivity = relevantActivities.reduce<Record<string, number>>((acc, activity) => {
-      if (acc[activity.button.text]) {
-        acc[activity.button.text] += activity.timeBlock.duration / 3600;
+    const totalTimePerActivity = relevantActivities.reduce<Record<string, number>>((activities, activity) => {
+      if (activities[activity.button.text]) {
+        activities[activity.button.text] += activity.timeBlock.duration / 3600;
       } else {
-        acc[activity.button.text] = activity.timeBlock.duration / 3600;
+        activities[activity.button.text] = activity.timeBlock.duration / 3600;
       }
-      return acc;
+      return activities;
     }, {});
 
     // Step 2: Convert the result into an array of ActivitySummary objects
