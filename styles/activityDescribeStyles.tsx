@@ -26,10 +26,32 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 15,
-        gap: 20,
+        gap: 10,
+      },
+      topRow: {
+        height: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'relative',
+      },
+      deleteButton: {
+        position: 'absolute',
+        left: 16,
+        top: '50%',
+        transform: [{ translateY: -12 }],
+        // padding: 10,
+        zIndex: 10,
       },
       titleContainer: {
-        alignItems: 'center',
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          alignItems: 'center',
+      },
+      editIcon: {
+        position: 'absolute',
+        top: '50%',
+        transform: [{ translateY: -11 }],
       },
       bodyContainer: {
 
@@ -77,19 +99,16 @@ const styles = StyleSheet.create({
         // alignItems: 'center',
       },
       rowContainer: {
+        flex: 1,
         flexDirection: 'row',
       },
-      tagItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 8,
-      },
-      minusIcon: {
-        marginLeft: 8,
-      },
-      addButton: {
-        marginTop: 8,
-      },
+
+      // minusIcon: {
+      //   marginLeft: 8,
+      // },
+      // addButton: {
+      //   marginTop: 8,
+      // },
       detailsContainer: {
         flexDirection: 'row',
         flex: 1, // Allows this section to take up the remaining space

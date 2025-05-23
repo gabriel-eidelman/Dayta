@@ -1,14 +1,12 @@
-import {ModalProps, Modal, View, StyleSheet, Dimensions, Text, TouchableWithoutFeedback, TextInput, FlatList, TouchableOpacity} from 'react-native'
-import {ThemedText} from '../ThemedText'
+import {ModalProps, Modal, View, StyleSheet, Dimensions, Pressable, Text, TouchableWithoutFeedback, TextInput, FlatList, TouchableOpacity} from 'react-native'
 import React, {useState, useEffect} from 'react'
 import { Button } from '@rneui/themed'
 import {ButtonState, Activity} from '@/Types/ActivityTypes'
 import { useAppContext } from '@/contexts/AppContext';
-import RNPickerSelect from 'react-native-picker-select'
-import { AntDesign } from '@expo/vector-icons';
-import CategoryBar from '../CategoryBar'
-import {Feather, MaterialCommunityIcons, FontAwesome, FontAwesome5, MaterialIcons} from '@expo/vector-icons'
-import { parse } from '@babel/core'
+import {Feather, Ionicons, MaterialCommunityIcons, FontAwesome, FontAwesome5, MaterialIcons} from '@expo/vector-icons'
+// import { parse } from '@babel/core'
+import styles from '@/styles/activityDescribeStyles'
+import font_styles from '@/styles/reusable/typography'
 
 const {width, height} = Dimensions.get("window");
 const buttonWidth = width/6.25
@@ -20,15 +18,156 @@ const buttonWidth = width/6.25
     onClose: () => void;
     onTapOut: () => void;
   }
-  interface CustomActItemProps {
-    customAct: ButtonState;
-    updatedTags: string[];
-    setUpdatedTags: React.Dispatch<React.SetStateAction<string[]>>
-    updatedCat: string[];
-    movementIntensity: string;
-    setMovementIntensity: React.Dispatch<React.SetStateAction<string>>
-  }
 
+const CustomActivityEdit: React.FC<MultitaskModalProps> = ({ ActivityDescribeVisible, Info, onClose, onTapOut, ...modalProps }) => {
+
+    const {updateCustomActivities, removeCustomAct} = useAppContext();
+    const startingTags: string[] = Info.tags
+    const [updatedTags, setUpdatedTags] = useState(startingTags);
+    const startingCat: string[] = Info.category ? Info.category : []
+    const [updatedCat, setUpdatedCat] = useState<string[]>(startingCat as string[]);
+    const startingMovementIntensity: number = (Info.movementIntensity && Info.movementIntensity>=0 && Info.movementIntensity<=10) ? Info.movementIntensity : 0
+    const [movementIntensity, setMovementIntensity] = useState<string>(startingMovementIntensity.toString())
+    const [titleWidth, setTitleWidth] = useState(0);
+
+    // Submit the tags to the database
+    const handleSubmitTags = () => {
+      let cat: string[] = []
+      if(Info.category) {
+        cat = Info.category
+      }
+      const parsedMovement = parseInt(movementIntensity)!==undefined ? parseInt(movementIntensity) : 0
+
+      const updates: Partial<Activity> = {
+        //first turn input value into unix. Create function for this. 
+        button: {
+          text: Info.text,
+          keywords: Info.keywords,
+          iconLibrary: Info.iconLibrary,
+          icon: Info.icon,
+          pressed: false,
+          tags: updatedTags,
+          category: cat,
+          movementIntensity: parsedMovement
+        },
+      };
+         updateCustomActivities(Info, updates);
+      // Add your database logic here
+    };
+
+    useEffect(() => {
+      if(Info.category) {
+        setUpdatedCat(Info.category)
+      }
+      else {
+        setUpdatedCat([])
+      }
+      if(Info.tags) {
+        setUpdatedTags(Info.tags)
+      }
+      else {
+        setUpdatedTags([]);
+      }
+    }, [Info])
+
+    const editTitle = () => {
+      console.log("Edit title")
+      // setTitleName("newTitle")
+    }
+    const onDelete = () => {
+      console.log("Deleting")
+      removeCustomAct(Info);
+      onClose();
+    }
+    return(
+              <Modal 
+        transparent={true}
+        animationType="slide"
+        visible={ActivityDescribeVisible}
+
+        {...modalProps}>
+          <TouchableWithoutFeedback onPress={onTapOut}>
+            <View style={styles.MultitaskModalOverlay}>
+            <TouchableWithoutFeedback>
+                <View style={styles.ActivityDescribeModalContent}>
+                  <View style={styles.topRow}>
+                    <Pressable style={styles.deleteButton} onPress={onDelete} hitSlop={10}>
+                        <Ionicons name="trash" size={25} color="red"></Ionicons>
+                    </Pressable>
+                      <View style={styles.titleContainer}>
+                        <Text style={font_styles.h2} 
+                        onLayout={(e) => setTitleWidth(e.nativeEvent.layout.width)}>{Info.text}</Text>
+                      </View>
+                      <Pressable style={[styles.editIcon,  { left: '50%', marginLeft: titleWidth / 2 + 8 },]} onPress={editTitle}>
+                        <Ionicons name="pencil" size={25}></Ionicons>
+                      </Pressable>
+                </View>
+                <View style={styles.bodyContainer}>
+                  
+                </View>
+                {/* {Info ? 
+                <ActivityItem activity={Info} updatedTags={updatedTags} movementIntensity={movementIntensity} setMovementIntensity={setMovementIntensity} updatedCat={updatedCat} setUpdatedTags={setUpdatedTags} updateActivity={updateActivity} onTap={() => alert("Not Pressable")}/> : 
+                <Text>Invalid Activity</Text>} */}
+                {/* <CategoryBar current={updatedCat} onPress={addCategory} deleteCat={onDeleteCat}/> */}
+                <View style={styles.nextContainer}>
+                  <Button title="Done" style={styles.nextButton} onPress={() => { onClose()}} />
+                </View>
+            </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+    );
+    
+}
+
+export default CustomActivityEdit;
+
+
+
+
+/* DEPRACTED CODE */
+
+/*
+        <Modal 
+        transparent={true}
+        animationType="slide"
+        visible={ActivityDescribeVisible}
+
+        {...modalProps}>
+          <TouchableWithoutFeedback onPress={onTapOut}>
+            <View style={styles.MultitaskModalOverlay}>
+            <TouchableWithoutFeedback>
+                <View style={styles.ActivityDescribeModalContent}>
+                  <View style={styles.titleContainer}>
+                    <ThemedText type="title">Activity Info</ThemedText>
+                  </View>
+                {Info ? 
+                <ActivityItem customAct={Info} updatedTags={updatedTags} movementIntensity={movementIntensity} setMovementIntensity={setMovementIntensity} updatedCat={updatedCat} setUpdatedTags={setUpdatedTags}/> : 
+                <Text>Invalid Activity</Text>}
+                <CategoryBar current={updatedCat} onPress={addCategory} deleteCat={onDelete}/>
+                <View style={styles.nextContainer}>
+                  <Button title="Next" style={styles.nextButton} onPress={() => {handleSubmitTags(); onClose()}} />
+                </View>
+            </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+*/
+
+/*
+interface CustomActItemProps {
+  customAct: ButtonState;
+  updatedTags: string[];
+  setUpdatedTags: React.Dispatch<React.SetStateAction<string[]>>
+  updatedCat: string[];
+  movementIntensity: string;
+  setMovementIntensity: React.Dispatch<React.SetStateAction<string>>
+}
+*/
+
+/*
   const ActivityItem = ({ customAct, updatedCat, updatedTags, setUpdatedTags, movementIntensity, setMovementIntensity }: CustomActItemProps) => {
     const iconMapping: { [key: string]: JSX.Element } = {
       "sunlight": <Feather name="sun" style={styles.category} />,
@@ -102,10 +241,6 @@ const buttonWidth = width/6.25
           <View style={styles.tagContainer}>
           {updatedTags.map((tag, index) => (
         <View key={index} style={styles.tagItem}>
-          <TagDropdown
-            tagValue={tag}
-            setTagValue={(value) => handleSetTagValue(index, value as string)}
-          />
           {updatedTags.length > 1 && (
             <TouchableOpacity onPress={() => handleDeleteTag(index)}>
               <FontAwesome name="minus-circle" size={16} color="red" style={styles.minusIcon} />
@@ -141,55 +276,48 @@ const buttonWidth = width/6.25
       </View>
 
   );}
-const CustomActivityEdit: React.FC<MultitaskModalProps> = ({ ActivityDescribeVisible, Info, onClose, onTapOut, ...modalProps }) => {
+*/
 
-    const {updateCustomActivities} = useAppContext();
-    const startingTags: string[] = Info.tags
-    const [updatedTags, setUpdatedTags] = useState(startingTags);
-    const startingCat: string[] = Info.category ? Info.category : []
-    const [updatedCat, setUpdatedCat] = useState<string[]>(startingCat as string[]);
-    const startingMovementIntensity: number = (Info.movementIntensity && Info.movementIntensity>=0 && Info.movementIntensity<=10) ? Info.movementIntensity : 0
-    const [movementIntensity, setMovementIntensity] = useState<string>(startingMovementIntensity.toString())
-    // Submit the tags to the database
-    const handleSubmitTags = () => {
-      let cat: string[] = []
-      if(Info.category) {
-        cat = Info.category
-      }
-      const parsedMovement = parseInt(movementIntensity)!==undefined ? parseInt(movementIntensity) : 0
+/*
+<TagDropdown
+  tagValue={tag}
+  setTagValue={(value) => handleSetTagValue(index, value as string)}
+/>
+*/
+/*
+interface TagDropdownProps {
+  tagValue: string;
+  setTagValue: React.Dispatch<React.SetStateAction<string>>;
+}
+const TagDropdown: React.FC<TagDropdownProps> = ({ tagValue, setTagValue }) => {
+  const tags = [
+    { label: 'Food/Drink', value: 'Food/Drink'},
+    { label: 'Physical', value: 'Physical' },
+    { label: 'Relax', value: 'Relax' },
+    { label: 'Music', value: 'Music' },
+    { label: 'Entertainment', value: 'Entertainment' },
+    { label: 'Social', value: 'Social' },
+    { label: 'Work/Study', value: 'Work/Study' },
+    { label: 'Travel/Commute', value: 'Travel/Commute' },
+    { label: 'Hobbies', value: 'Hobbies' },
+    { label: 'Chores', value: 'Chores' },
+    { label: 'Self-Improvement', value: 'Self-Improvement' },
+    {label: 'Family Time', value: 'Family Time'},
+    { label: 'Helping Others', value: 'Helping Others' },
+    {label: 'Intaking Knowledge', value: 'Intaking Knowledge'},
+    { label: 'Other', value: 'Other' },
+  ]
+  return (
+    <RNPickerSelect
+      value={tagValue}
+      onValueChange={(value) => setTagValue(value)}
+      items={tags}
+    />
+  );
+};
+*/
 
-      const updates: Partial<Activity> = {
-        //first turn input value into unix. Create function for this. 
-        button: {
-          text: Info.text,
-          keywords: Info.keywords,
-          iconLibrary: Info.iconLibrary,
-          icon: Info.icon,
-          pressed: false,
-          tags: updatedTags,
-          category: cat,
-          movementIntensity: parsedMovement
-        },
-      };
-         updateCustomActivities(Info, updates);
-      // Add your database logic here
-    };
-
-    useEffect(() => {
-      if(Info.category) {
-        setUpdatedCat(Info.category)
-      }
-      else {
-        setUpdatedCat([])
-      }
-      if(Info.tags) {
-        setUpdatedTags(Info.tags)
-      }
-      else {
-        setUpdatedTags([]);
-      }
-    }, [Info])
-
+/*
     const addCategory = (text: string) => {
       if(Info && text) {
         let newCat: string[] = [""]
@@ -248,173 +376,115 @@ const CustomActivityEdit: React.FC<MultitaskModalProps> = ({ ActivityDescribeVis
       setUpdatedCat(newCat)
       
     }
-    return(
-        <Modal 
-        transparent={true}
-        animationType="slide"
-        visible={ActivityDescribeVisible}
+*/
 
-        {...modalProps}>
-          <TouchableWithoutFeedback onPress={onTapOut}>
-            <View style={styles.MultitaskModalOverlay}>
-            <TouchableWithoutFeedback>
-                <View style={styles.ActivityDescribeModalContent}>
-                  <View style={styles.titleContainer}>
-                    <ThemedText type="title">Activity Info</ThemedText>
-                  </View>
-                {Info ? 
-                <ActivityItem customAct={Info} updatedTags={updatedTags} movementIntensity={movementIntensity} setMovementIntensity={setMovementIntensity} updatedCat={updatedCat} setUpdatedTags={setUpdatedTags}/> : 
-                <Text>Invalid Activity</Text>}
-                <CategoryBar current={updatedCat} onPress={addCategory} deleteCat={onDelete}/>
-                <View style={styles.nextContainer}>
-                  <Button title="Next" style={styles.nextButton} onPress={() => {handleSubmitTags(); onClose()}} />
-                </View>
-            </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-    );
-    
-}
-interface TagDropdownProps {
-  tagValue: string;
-  setTagValue: React.Dispatch<React.SetStateAction<string>>;
-}
-const TagDropdown: React.FC<TagDropdownProps> = ({ tagValue, setTagValue }) => {
-  const tags = [
-    { label: 'Food/Drink', value: 'Food/Drink'},
-    { label: 'Physical', value: 'Physical' },
-    { label: 'Relax', value: 'Relax' },
-    { label: 'Music', value: 'Music' },
-    { label: 'Entertainment', value: 'Entertainment' },
-    { label: 'Social', value: 'Social' },
-    { label: 'Work/Study', value: 'Work/Study' },
-    { label: 'Travel/Commute', value: 'Travel/Commute' },
-    { label: 'Hobbies', value: 'Hobbies' },
-    { label: 'Chores', value: 'Chores' },
-    { label: 'Self-Improvement', value: 'Self-Improvement' },
-    {label: 'Family Time', value: 'Family Time'},
-    { label: 'Helping Others', value: 'Helping Others' },
-    {label: 'Intaking Knowledge', value: 'Intaking Knowledge'},
-    { label: 'Other', value: 'Other' },
-  ]
-  return (
-    <RNPickerSelect
-      value={tagValue}
-      onValueChange={(value) => setTagValue(value)}
-      items={tags}
-    />
-  );
-};
-const styles = StyleSheet.create({
-    MultitaskModalOverlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      ActivityDescribeModalContent: {
-        flex: 0.5,
-        width: width/1.1,
-        height: height/2,
-        padding: 10,
-        backgroundColor: 'white',
-        borderRadius: 10,
-      },
-      titleContainer: {
-        marginTop: 10,
-        marginBottom: 5,
-        alignItems: 'center'
-      },
+// const styles = StyleSheet.create({
+//     MultitaskModalOverlay: {
+//         flex: 1,
+//         backgroundColor: 'rgba(0, 0, 0, 0.5)',
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//       },
+//       ActivityDescribeModalContent: {
+//         flex: 0.5,
+//         width: width/1.1,
+//         height: height/2,
+//         padding: 10,
+//         backgroundColor: 'white',
+//         borderRadius: 10,
+//       },
+//       titleContainer: {
+//         marginTop: 10,
+//         marginBottom: 5,
+//         alignItems: 'center'
+//       },
       
-      activityName: {
-        // flex: 3,
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: 'darkcyan'
-      },
-      exerciseSection: {
-        marginTop: 'auto'
-      },
-      categoryContainer: {
-        flexDirection: 'row',
+//       activityName: {
+//         // flex: 3,
+//         fontSize: 16,
+//         fontWeight: 'bold',
+//         color: 'darkcyan'
+//       },
+//       exerciseSection: {
+//         marginTop: 'auto'
+//       },
+//       categoryContainer: {
+//         flexDirection: 'row',
         
-      },
-      category: { 
-        fontSize: 15,
-        color: 'red',
-        marginHorizontal: 5
+//       },
+//       category: { 
+//         fontSize: 15,
+//         color: 'red',
+//         marginHorizontal: 5
 
-      },
-      tagContainer: {
-        marginLeft: 'auto'
-      },
-      tags: {
-        fontSize: 12, 
-        color: 'black'
-      },
+//       },
+//       tagContainer: {
+//         marginLeft: 'auto'
+//       },
+//       tags: {
+//         fontSize: 12, 
+//         color: 'black'
+//       },
       
-      listContent: {
-        paddingHorizontal: 20,
-      },
-      activityContainer: {
-        flex: 1,
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        padding: 15,
-        marginTop: 10,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 10,
-        shadowOffset: { width: 0, height: 4 },
-        // alignItems: 'center',
-      },
-      rowContainer: {
-        flexDirection: 'row',
-      },
-      tagItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 8,
-      },
-      minusIcon: {
-        marginLeft: 8,
-      },
-      addButton: {
-        marginTop: 8,
-      },
-      detailsContainer: {
-        flexDirection: 'row',
-        flex: 1, // Allows this section to take up the remaining space
-      },
-      name: {
-        // flexDirection: 'row',
-        // marginRight: 30,
-          flexShrink: 1,
-      },
-      nextContainer: {
-        left: ((width/1.1) / 2) - (buttonWidth / 2), // Center horizontally more precisely
-        marginTop: 'auto'
-      },
-      slider: {
-          flex: 1,
-          flexDirection: 'row',
-          width: '100%',
-          height: 40,
-      },
-      nextButton: {
-        paddingTop: 10,
-        width: buttonWidth,
-      }
-})
+//       listContent: {
+//         paddingHorizontal: 20,
+//       },
+//       activityContainer: {
+//         flex: 1,
+//         backgroundColor: '#fff',
+//         borderRadius: 10,
+//         padding: 15,
+//         marginTop: 10,
+//         shadowColor: '#000',
+//         shadowOpacity: 0.1,
+//         shadowRadius: 10,
+//         shadowOffset: { width: 0, height: 4 },
+//         // alignItems: 'center',
+//       },
+//       rowContainer: {
+//         flexDirection: 'row',
+//       },
+//       tagItem: {
+//         flexDirection: 'row',
+//         alignItems: 'center',
+//         marginBottom: 8,
+//       },
+//       minusIcon: {
+//         marginLeft: 8,
+//       },
+//       addButton: {
+//         marginTop: 8,
+//       },
+//       detailsContainer: {
+//         flexDirection: 'row',
+//         flex: 1, // Allows this section to take up the remaining space
+//       },
+//       name: {
+//         // flexDirection: 'row',
+//         // marginRight: 30,
+//           flexShrink: 1,
+//       },
+//       nextContainer: {
+//         left: ((width/1.1) / 2) - (buttonWidth / 2), // Center horizontally more precisely
+//         marginTop: 'auto'
+//       },
+//       slider: {
+//           flex: 1,
+//           flexDirection: 'row',
+//           width: '100%',
+//           height: 40,
+//       },
+//       nextButton: {
+//         paddingTop: 10,
+//         width: buttonWidth,
+//       }
+// })
 
-const androidCustom = StyleSheet.create({
-  dropdownContainer: {
-    height: height/6, // Adjust this value as needed
-    width: '100%', // Or a fixed width if required
-    overflow: 'hidden', // Ensures dropdown content does not spill outside
-    padding: 10, // Optional padding
-  },
-})
-export default CustomActivityEdit;
+// const androidCustom = StyleSheet.create({
+//   dropdownContainer: {
+//     height: height/6, // Adjust this value as needed
+//     width: '100%', // Or a fixed width if required
+//     overflow: 'hidden', // Ensures dropdown content does not spill outside
+//     padding: 10, // Optional padding
+//   },
+// })

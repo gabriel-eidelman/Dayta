@@ -126,6 +126,10 @@ function Personalize() {
 
     // Callback fn for create habit modal
     const handleCreateHabit = (inputText: string) => {
+      if(inputText.length==0) {
+        alert("Please enter a valid activity name")
+        return;
+      }
       setCreateHabitModalVisible(false);
           const newButton = {text: inputText, keywords: [], pressed: false, tags: []}
         setTimeout(() => {

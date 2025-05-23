@@ -90,9 +90,9 @@ export default function Recommendations() {
     setCards(customizedCards)
   }
 
-  useEffect(() => {
-    generateCards()
-  }, [avgLoggedTimeDaily])
+  // useEffect(() => {
+  //   generateCards()
+  // }, [avgLoggedTimeDaily])
   const swiperRef = useRef<any>(null);
   const [cardIndex, setCardIndex] = useState(0);
 
@@ -202,46 +202,8 @@ export default function Recommendations() {
             infinite={false}
             showSecondCard={false}
             backgroundColor='transparent'
-            key={cardIndex}  // Force re-render on card index change
+            // key={cardIndex}  // Force re-render on card index change
             stackSeparation={15}
-            // overlayLabels={{
-            //   left: {
-            //     title: 'Next',
-            //     style: {
-            //       label: {
-            //         backgroundColor: 'green',
-            //         borderColor: 'green',
-            //         color: 'white',
-            //         borderWidth: 1,
-            //       },
-            //       wrapper: {
-            //         flexDirection: 'column',
-            //         alignItems: 'flex-end',
-            //         justifyContent: 'flex-start',
-            //         marginTop: 20,
-            //         marginLeft: -20,
-            //       },
-            //     },
-            //   },
-            //   right: {
-            //     title: 'Prev',
-            //     style: {
-            //       label: {
-            //         backgroundColor: 'green',
-            //         borderColor: 'green',
-            //         color: 'white',
-            //         borderWidth: 1,
-            //       },
-            //       wrapper: {
-            //         flexDirection: 'column',
-            //         alignItems: 'flex-start',
-            //         justifyContent: 'flex-start',
-            //         marginTop: 20,
-            //         marginLeft: 20,
-            //       },
-            //     },
-            //   },
-            // }}
           />
           </View>
         <Animated.View style={[styles.arrowContainer, { transform: [{ translateX: arrowTranslateX }] }]}>
