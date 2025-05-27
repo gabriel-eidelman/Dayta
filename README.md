@@ -1,24 +1,17 @@
 # Dayta - Mobile Productivity & Journaling App
 
 <p align="center">
-  <img src="assets/fonts/DaytaTempLogo.png" alt="DaytaTempLogo" width="200"/>
-</p>
-
-<p align="center">
+  <a href="#overview">Overview</a> •
   <a href="#features">Features</a> •
   <a href="#tech-stack">Tech Stack</a> •
-  <a href="#screenshots">Screenshots</a> •
-  <a href="#installation">Installation</a> •
-  <a href="#architecture">Architecture</a> •
-  <a href="#lessons-learned">Lessons Learned</a>
+  <a href="#interface-preview">Interface</a>
 </p>
 
 ## 📱 Overview
 
-Dayta is a React Native mobile application that helps users track daily activities, gain insights from their data, and receive personalized recommendations to improve productivity and wellbeing. The app combines intuitive activity journaling with data analysis to detect patterns and provide science-backed recommendations.
+Dayta is a React Native mobile application that helps users track daily activities, gain insights from their data, and receive personalized recommendations to improve productivity and well-being. The app combines intuitive activity journaling with data analysis to detect patterns and provide science-backed recommendations.
 
-**App Store**: Coming Soon
-**Play Store**: Coming Soon
+Coming soon to the app store and play store!
 
 ## ✨ Features
 
@@ -38,17 +31,6 @@ Dayta is a React Native mobile application that helps users track daily activiti
 - **Authentication**: Firebase Auth
 - **Data Visualization**: React Native Chart Kit
 
-## 🔧 Installation
+## 🧩 Interface Preview
 
-```bash
-# Clone the repository
-git clone https://github.com/gabriel-eidelman/Dayta.git
-
-# Navigate to the project folder
-cd dayta
-
-# Install dependencies
-npm install
-
-# Start the development server
-npx expo start
+<img width="266" alt="DaytaJournal" src="https://github.com/user-attachments/assets/fc17096d-72cc-4deb-ae5b-97bf872cbc63" />
