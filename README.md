@@ -30,7 +30,3 @@ Coming soon to the app store and play store!
 - **Storage**: Firebase Firestore, MMKV
 - **Authentication**: Firebase Auth
 - **Data Visualization**: React Native Chart Kit
-
-## 🧩 Interface Preview
-
-<img width="266" alt="DaytaJournal" src="https://github.com/user-attachments/assets/fc17096d-72cc-4deb-ae5b-97bf872cbc63" />
